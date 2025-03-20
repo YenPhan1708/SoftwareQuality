@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import java.util.Observer;
+import java.util.Observable;
 
 
 /** <p>SlideViewerComponent is a graphical component that can show slides.</p>
@@ -17,7 +19,8 @@ import javax.swing.JFrame;
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-public class SlideViewerComponent extends JComponent {
+public class SlideViewerComponent extends JComponent implements Observer
+{
 		
 	private Slide slide; // current slide
 	private Font labelFont = null; // font for labels
@@ -34,30 +37,24 @@ public class SlideViewerComponent extends JComponent {
 	private static final int XPOS = 1100;
 	private static final int YPOS = 20;
 
-	public SlideViewerComponent(Presentation pres, JFrame frame) {
+	public SlideViewerComponent(Presentation pres, JFrame frame)
+	{
 		setBackground(BGCOLOR); 
 		presentation = pres;
 		labelFont = new Font(FONTNAME, FONTSTYLE, FONTHEIGHT);
 		this.frame = frame;
+		presentation.addObserver(this);
 	}
 
-	public Dimension getPreferredSize() {
+	public Dimension getPreferredSize()
+	{
 		return new Dimension(Slide.WIDTH, Slide.HEIGHT);
 	}
 
-	public void update(Presentation presentation, Slide data) {
-		if (data == null) {
-			repaint();
-			return;
-		}
-		this.presentation = presentation;
-		this.slide = data;
-		repaint();
-		frame.setTitle(presentation.getTitle());
-	}
 
 // draw the slide
-	public void paintComponent(Graphics g) {
+	public void paintComponent(Graphics g)
+	{
 		g.setColor(BGCOLOR);
 		g.fillRect(0, 0, getSize().width, getSize().height);
 		if (presentation.getSlideNumber() < 0 || slide == null) {
@@ -69,5 +66,16 @@ public class SlideViewerComponent extends JComponent {
                  presentation.getSize(), XPOS, YPOS);
 		Rectangle area = new Rectangle(0, YPOS, getWidth(), (getHeight() - YPOS));
 		slide.draw(g, area, this);
+	}
+
+	@Override
+	public void update(Observable observable, Object arg)
+	{
+		if (arg instanceof Slide)
+		{
+			this.slide = (Slide) arg;
+			repaint();
+			frame.setTitle(presentation.getTitle());
+		}
 	}
 }
