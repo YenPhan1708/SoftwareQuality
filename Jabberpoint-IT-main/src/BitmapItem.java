@@ -20,7 +20,8 @@ import java.io.IOException;
  * @version 1.6 2014/05/16 Sylvia Stuurman
 */
 
-public class BitmapItem extends SlideItem {
+public class BitmapItem extends SlideItem
+{
   private BufferedImage bufferedImage;
   private String imageName;
   
@@ -32,7 +33,8 @@ public class BitmapItem extends SlideItem {
 	{
 		super(level);
 		imageName = name;
-		try {
+		try
+		{
 			bufferedImage = ImageIO.read(new File(imageName));
 		}
 		catch (IOException e)

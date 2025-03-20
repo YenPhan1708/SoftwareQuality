@@ -52,9 +52,11 @@ public class TextItem extends SlideItem
 // geef de AttributedString voor het item
 	public AttributedString getAttributedString(Style style, float scale)
 	{
-		AttributedString attrStr = new AttributedString(getText());
-		attrStr.addAttribute(TextAttribute.FONT, style.getFont(scale), 0, text.length());
-		return attrStr;
+		if (text == null)
+		{ // Avoid NullPointerException
+			return new AttributedString("");
+		}
+		return new AttributedString(text);
 	}
 
 	@Override
@@ -91,18 +93,27 @@ public class TextItem extends SlideItem
 
 	private List<TextLayout> getLayouts(Graphics g, Style s, float scale)
 	{
-		List<TextLayout> layouts = new ArrayList<TextLayout>();
-		AttributedString attrStr = getAttributedString(s, scale);
-    	Graphics2D g2d = (Graphics2D) g;
-    	FontRenderContext frc = g2d.getFontRenderContext();
-    	LineBreakMeasurer measurer = new LineBreakMeasurer(attrStr.getIterator(), frc);
-    	float wrappingWidth = (Slide.WIDTH - s.indent) * scale;
-    	while (measurer.getPosition() < getText().length())
+		List<TextLayout> layouts = new ArrayList<>();
+
+		String textContent = getText();
+		if (textContent.isEmpty())
 		{
-    		TextLayout layout = measurer.nextLayout(wrappingWidth);
-    		layouts.add(layout);
-    	}
-    	return layouts;
+			textContent = " "; // Ensure it has at least one space to prevent errors
+		}
+
+		AttributedString attrStr = new AttributedString(textContent);
+		Graphics2D g2d = (Graphics2D) g;
+		FontRenderContext frc = g2d.getFontRenderContext();
+
+		LineBreakMeasurer measurer = new LineBreakMeasurer(attrStr.getIterator(), frc);
+		float wrappingWidth = (Slide.WIDTH - s.indent) * scale;
+
+		while (measurer.getPosition() < textContent.length())
+		{
+			layouts.add(measurer.nextLayout(wrappingWidth));
+		}
+
+		return layouts;
 	}
 
 	public String toString()

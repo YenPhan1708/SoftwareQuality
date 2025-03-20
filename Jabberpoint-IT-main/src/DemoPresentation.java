@@ -8,9 +8,11 @@
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-class DemoPresentation extends Accessor {
+class DemoPresentation extends Accessor
+{
 
-	public void loadFile(Presentation presentation, String unusedFilename) {
+	public void loadFile(Presentation presentation, String unusedFilename)
+	{
 		presentation.setTitle("Demo Presentation");
 		Slide slide;
 		slide = new Slide();
@@ -48,7 +50,8 @@ class DemoPresentation extends Accessor {
 		presentation.append(slide);
 	}
 
-	public void saveFile(Presentation presentation, String unusedFilename) {
+	public void saveFile(Presentation presentation, String unusedFilename)
+	{
 		throw new IllegalStateException("Save As->Demo! called");
 	}
 }

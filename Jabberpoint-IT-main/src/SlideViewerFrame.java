@@ -1,4 +1,4 @@
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowAdapter;
 import javax.swing.JFrame;
@@ -12,15 +12,15 @@ import javax.swing.JFrame;
  * @version 1.4 2007/07/16 Sylvia Stuurman
  * @version 1.5 2010/03/03 Sylvia Stuurman
  * @version 1.6 2014/05/16 Sylvia Stuurman
-*/
+ */
 
 public class SlideViewerFrame extends JFrame {
 	private static final long serialVersionUID = 3227L;
-	
+
 	private static final String JABTITLE = "Jabberpoint 1.6 - OU";
 	public final static int WIDTH = 1200;
 	public final static int HEIGHT = 800;
-	
+
 	public SlideViewerFrame(String title, Presentation presentation) {
 		super(title);
 		SlideViewerComponent slideViewerComponent = new SlideViewerComponent(presentation, this);
@@ -28,19 +28,24 @@ public class SlideViewerFrame extends JFrame {
 		setupWindow(slideViewerComponent, presentation);
 	}
 
-// Setup GUI
-	public void setupWindow(SlideViewerComponent 
-			slideViewerComponent, Presentation presentation) {
+	// Setup GUI
+	public void setupWindow(SlideViewerComponent slideViewerComponent, Presentation presentation)
+	{
 		setTitle(JABTITLE);
+		setSize(new Dimension(WIDTH, HEIGHT));
+		setLayout(new BorderLayout());
+
+		// Keep the original menu controller
+		setMenuBar(new MenuController(this, presentation));
+
+		add(slideViewerComponent, BorderLayout.CENTER);
+
 		addWindowListener(new WindowAdapter() {
-				public void windowClosing(WindowEvent e) {
-					System.exit(0);
-				}
-			});
-		getContentPane().add(slideViewerComponent);
-		addKeyListener(new KeyController(presentation)); // add a controller
-		setMenuBar(new MenuController(this, presentation));	// add another controller
-		setSize(new Dimension(WIDTH, HEIGHT)); // Same sizes as Slide has.
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+
 		setVisible(true);
 	}
 }

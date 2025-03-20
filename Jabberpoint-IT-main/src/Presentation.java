@@ -43,9 +43,11 @@ public class Presentation extends Observable
 		return showTitle;
 	}
 
-	public void setTitle(String nt)
+	public void setTitle(String title)
 	{
-		showTitle = nt;
+		showTitle = title;
+		setChanged();
+		notifyObservers();
 	}
 
 	public void setShowView(SlideViewerComponent slideViewerComponent)
@@ -72,30 +74,42 @@ public class Presentation extends Observable
 	{
 		if (currentSlideNumber > 0)
 		{
-			setSlideNumber(currentSlideNumber - 1);
-	    }
+			currentSlideNumber--;
+			setChanged();
+			notifyObservers(getCurrentSlide());
+		}
 	}
 
 	// go to the next slide unless your at the end of the presentation.
 	public void nextSlide()
 	{
-		if (currentSlideNumber < (showList.size()-1))
+		if (currentSlideNumber < showList.size() - 1)
 		{
-			setSlideNumber(currentSlideNumber + 1);
+			currentSlideNumber++;
+			setChanged();
+			notifyObservers(getCurrentSlide());
 		}
 	}
 
 	// Delete the presentation to be ready for the next one.
-	void clear()
+	public void clear()
 	{
-		showList = new ArrayList<Slide>();
-		setSlideNumber(-1);
+		showList = new ArrayList<>();
+		currentSlideNumber = -1;
+		setChanged();
+		notifyObservers();
 	}
 
 	// Add a slide to the presentation
 	public void append(Slide slide)
 	{
 		showList.add(slide);
+		if (currentSlideNumber == -1)
+		{
+			currentSlideNumber = 0;
+		}
+		setChanged();
+		notifyObservers(slide);
 	}
 
 	// Get a slide with a certain slidenumber
@@ -111,7 +125,7 @@ public class Presentation extends Observable
 	// Give the current slide
 	public Slide getCurrentSlide()
 	{
-		return getSlide(currentSlideNumber);
+		return (currentSlideNumber >= 0 && currentSlideNumber < showList.size()) ? showList.get(currentSlideNumber) : null;
 	}
 
 	public void exit(int n)
