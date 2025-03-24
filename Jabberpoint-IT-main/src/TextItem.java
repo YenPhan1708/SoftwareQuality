@@ -1,7 +1,4 @@
-import java.awt.Rectangle;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.font.TextLayout;
 import java.awt.font.TextAttribute;
 import java.awt.font.LineBreakMeasurer;
@@ -9,54 +6,67 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.text.AttributedString;
+import java.text.AttributedCharacterIterator;
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-/** <p>A tekst item.</p>
- * <p>A TextItem has drawingfunctionality.</p>
- * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
- * @version 1.1 2002/12/17 Gert Florijn
- * @version 1.2 2003/11/19 Sylvia Stuurman
- * @version 1.3 2004/08/17 Sylvia Stuurman
- * @version 1.4 2007/07/16 Sylvia Stuurman
- * @version 1.5 2010/03/03 Sylvia Stuurman
- * @version 1.6 2014/05/16 Sylvia Stuurman
- */
-
 public class TextItem extends SlideItem
 {
 	private String text;
-	
 	private static final String EMPTYTEXT = "No Text Given";
+	private Font font;
+	private Color color;
 
-// a textitem of level level, with the text string
 	public TextItem(int level, String string)
 	{
 		super(level);
 		text = string;
+		this.font = new Font("Arial", Font.PLAIN, 24); // Default font
+		this.color = Color.BLACK; // Default color
 	}
 
-// an empty textitem
 	public TextItem()
 	{
 		this(0, EMPTYTEXT);
 	}
 
-// give the text
 	public String getText()
 	{
 		return text == null ? "" : text;
 	}
 
-// geef de AttributedString voor het item
+	public Font getFont()
+	{
+		return this.font;
+	}
+
+	public void setFont(Font font)
+	{
+		this.font = font;
+	}
+
+	public Color getColor()
+	{
+		return this.color;
+	}
+
+	public void setColor(Color color)
+	{
+		this.color = color;
+	}
+
 	public AttributedString getAttributedString(Style style, float scale)
 	{
-		if (text == null)
-		{ // Avoid NullPointerException
-			return new AttributedString("");
+		if (text == null || text.isEmpty())
+		{
+			return new AttributedString(EMPTYTEXT);
 		}
-		return new AttributedString(text);
+		AttributedString attributedString = new AttributedString(text);
+		attributedString.addAttribute(TextAttribute.FONT, style.getFont(scale));
+		attributedString.addAttribute(TextAttribute.SIZE, style.getFont(scale).getSize2D());
+		attributedString.addAttribute(TextAttribute.FOREGROUND, style.color);
+		return attributedString;
 	}
 
 	@Override
@@ -81,7 +91,8 @@ public class TextItem extends SlideItem
 		}
 		List<TextLayout> layouts = getLayouts(g, myStyle, scale);
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setColor(myStyle.color);
+		g2d.setColor(color);
+		g2d.setFont(font);
 		int yOffset = y;
 		for (TextLayout layout : layouts)
 		{
@@ -94,30 +105,30 @@ public class TextItem extends SlideItem
 	private List<TextLayout> getLayouts(Graphics g, Style s, float scale)
 	{
 		List<TextLayout> layouts = new ArrayList<>();
-
 		String textContent = getText();
 		if (textContent.isEmpty())
 		{
-			textContent = " "; // Ensure it has at least one space to prevent errors
+			textContent = " ";
 		}
 
 		AttributedString attrStr = new AttributedString(textContent);
+		attrStr.addAttribute(TextAttribute.FONT, s.getFont(scale));
+		attrStr.addAttribute(TextAttribute.SIZE, s.getFont(scale).getSize2D());
+		attrStr.addAttribute(TextAttribute.FOREGROUND, s.color);
+
 		Graphics2D g2d = (Graphics2D) g;
 		FontRenderContext frc = g2d.getFontRenderContext();
-
 		LineBreakMeasurer measurer = new LineBreakMeasurer(attrStr.getIterator(), frc);
 		float wrappingWidth = (Slide.WIDTH - s.indent) * scale;
 
-		while (measurer.getPosition() < textContent.length())
-		{
+		while (measurer.getPosition() < textContent.length()) {
 			layouts.add(measurer.nextLayout(wrappingWidth));
 		}
-
 		return layouts;
 	}
 
 	public String toString()
 	{
-		return "TextItem[" + getLevel()+","+getText()+"]";
+		return "TextItem[" + getLevel() + "," + getText() + "]";
 	}
 }

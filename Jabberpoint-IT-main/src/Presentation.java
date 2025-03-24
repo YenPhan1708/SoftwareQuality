@@ -33,6 +33,16 @@ public class Presentation extends Observable
 		clear();
 	}
 
+	public ArrayList<Slide> getShowList()
+	{
+		return this.showList;
+	}
+
+	public void setShowList(ArrayList<Slide> showList)
+	{
+		this.showList = showList;
+	}
+
 	public int getSize()
 	{
 		return showList.size();
@@ -132,4 +142,11 @@ public class Presentation extends Observable
 	{
 		System.exit(n);
 	}
+
+	public void updateView()
+	{
+		setChanged();  // Mark the observable as changed
+		notifyObservers(getCurrentSlide());  // Notify observers with the current slide
+	}
+
 }

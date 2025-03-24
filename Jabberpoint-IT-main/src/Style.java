@@ -14,7 +14,8 @@ import java.awt.Font;
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-public class Style {
+public class Style
+{
 	private static Style[] styles; // de styles
 	
 	private static final String FONTNAME = "Helvetica";
@@ -24,7 +25,8 @@ public class Style {
 	int fontSize;
 	int leading;
 
-	public static void createStyles() {
+	public static void createStyles()
+	{
 		styles = new Style[5];    
 		// The styles are fixed.
 		styles[0] = new Style(0, Color.red,   48, 20);	// style for item-level 0
@@ -34,8 +36,14 @@ public class Style {
 		styles[4] = new Style(90, Color.black, 24, 10);	// style for item-level 4
 	}
 
-	public static Style getStyle(int level) {
-		if (level >= styles.length) {
+	public static Style getStyle(int level)
+	{
+		if (styles == null)
+		{
+			createStyles(); // Ensure styles are initialized
+		}
+		if (level >= styles.length)
+		{
 			level = styles.length - 1;
 		}
 		return styles[level];
@@ -44,15 +52,18 @@ public class Style {
 	public Style(int indent, Color color, int points, int leading) {
 		this.indent = indent;
 		this.color = color;
-		font = new Font(FONTNAME, Font.BOLD, fontSize=points);
+		this.fontSize = points; // Assign font size first
+		this.font = new Font(FONTNAME, Font.BOLD, this.fontSize);
 		this.leading = leading;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "["+ indent + "," + color + "; " + fontSize + " on " + leading +"]";
 	}
 
-	public Font getFont(float scale) {
+	public Font getFont(float scale)
+	{
 		return font.deriveFont(fontSize * scale);
 	}
 }

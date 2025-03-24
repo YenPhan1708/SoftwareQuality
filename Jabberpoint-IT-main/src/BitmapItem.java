@@ -58,12 +58,22 @@ public class BitmapItem extends SlideItem
 // give the  bounding box of the image
 	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style myStyle)
 	{
-		return new Rectangle(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
-	}
+		if (bufferedImage == null)
+		{
+			return new Rectangle(0, 0, 0, 0); // Return an empty rectangle if the image is missing
+		}
+		int width = bufferedImage.getWidth(observer);
+		int height = bufferedImage.getHeight(observer);
+		return new Rectangle(0, 0, (int) (width * scale), (int) (height * scale));	}
 
 	public void draw(int x, int y, float scale, Graphics g, Style myStyle, ImageObserver observer)
 	{
-		g.drawImage(bufferedImage, x, y, observer);
+		if (bufferedImage == null)
+		{
+			System.err.println("Warning: Cannot draw image, it is missing.");
+			return;
+		}
+		g.drawImage(bufferedImage, x, y, (int) (bufferedImage.getWidth(observer) * scale), (int) (bufferedImage.getHeight(observer) * scale), observer);
 	}
 
 	public String toString()

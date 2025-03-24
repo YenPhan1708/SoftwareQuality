@@ -1,8 +1,4 @@
-import java.awt.MenuBar;
-import java.awt.Frame;
-import java.awt.Menu;
-import java.awt.MenuItem;
-import java.awt.MenuShortcut;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -125,6 +121,17 @@ public class MenuController extends MenuBar {
 		addSlideMenuItem.addActionListener(e -> addNewSlide());
 		editMenu.add(addSlideMenuItem);
 
+		MenuItem textStyleItem = new MenuItem("Change Text Style");
+		textStyleItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				changeTextStyle();
+			}
+		});
+
+		editMenu.add(textStyleItem);
+
 		editMenu.add(menuItem = mkMenuItem(ADD_TEXT));
 		menuItem.addActionListener(e -> addText());
 
@@ -214,6 +221,32 @@ public class MenuController extends MenuBar {
 		presentation.append(newSlide);
 		presentation.setSlideNumber(presentation.getSize() - 1); // Move to the new slide
 		parent.repaint();
+	}
+
+	private void changeTextStyle()
+	{
+		JFontChooser fontChooser = new JFontChooser();
+		int result = fontChooser.showDialog(null);
+
+		if (result == JFontChooser.OK_OPTION)
+		{
+			Font selectedFont = fontChooser.getSelectedFont();
+			Color selectedColor = fontChooser.getSelectedColor();
+
+			for (Slide slide : presentation.getShowList())
+			{
+				for (SlideItem item : slide.getSlideItems())
+				{
+					if (item instanceof TextItem)
+					{
+						((TextItem) item).setFont(selectedFont);
+						((TextItem) item).setColor(selectedColor);
+					}
+				}
+			}
+
+			presentation.updateView(); // Refresh the slide viewer
+		}
 	}
 
 }

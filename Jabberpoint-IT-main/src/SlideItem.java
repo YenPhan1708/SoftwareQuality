@@ -2,6 +2,8 @@ import java.awt.Rectangle;
 import java.awt.Graphics;
 import java.awt.image.ImageObserver;
 
+import static java.awt.SystemColor.text;
+
 /** <p>The abstract class for an item on a slide<p>
  * <p>All SlideItems have drawingfunctionality.</p>
  * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
@@ -27,6 +29,13 @@ public abstract class SlideItem implements SlideItemInterface
 		this(0);
 	}
 
+	public void draw(Graphics g, Rectangle area)
+	{
+		Style style = Style.getStyle(level); // Get style based on level
+		g.setFont(style.getFont(1.0f)); // Apply font from Style
+		g.setColor(style.color);
+		g.drawString(String.valueOf(text), area.x + style.indent, area.y + style.leading);
+	}
 // Give the level
 	public int getLevel()
 	{
