@@ -1,8 +1,7 @@
-import java.awt.Rectangle;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.ImageObserver;
-
-import static java.awt.SystemColor.text;
+import java.util.ArrayList;
+import java.util.List;
 
 /** <p>The abstract class for an item on a slide<p>
  * <p>All SlideItems have drawingfunctionality.</p>
@@ -15,13 +14,14 @@ import static java.awt.SystemColor.text;
  * @version 1.6 2014/05/16 Sylvia Stuurman
 */
 
-public abstract class SlideItem implements SlideItemInterface
+public class SlideItem implements SlideItemInterface
 {
+	private List<SlideItemInterface> children = new ArrayList<>();
 	private int level = 0; // level of the slideitem
 
 	public SlideItem(int lev)
 	{
-		level = lev;
+		this.level = lev;
 	}
 
 	public SlideItem()
@@ -29,17 +29,58 @@ public abstract class SlideItem implements SlideItemInterface
 		this(0);
 	}
 
-	public void draw(Graphics g, Rectangle area)
+	public List<SlideItemInterface> getChildren()
 	{
-		Style style = Style.getStyle(level); // Get style based on level
-		g.setFont(style.getFont(1.0f)); // Apply font from Style
-		g.setColor(style.color);
-		g.drawString(String.valueOf(text), area.x + style.indent, area.y + style.leading);
-	}
-// Give the level
-	public int getLevel()
-	{
-		return level;
+		return this.children;
 	}
 
+	public void setChildren(List<SlideItemInterface> children)
+	{
+		this.children = children;
+	}
+
+	@Override
+	public int getLevel()
+	{
+		return this.level;
+	}
+
+	public void setLevel(int level)
+	{
+		this.level = level;
+	}
+
+	public void add(SlideItemInterface item)
+	{
+		children.add(item);
+	}
+
+	public void remove(SlideItemInterface item)
+	{
+		children.remove(item);
+	}
+
+	@Override
+	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style style) {
+		int width = 0, height = 0;
+		for (SlideItemInterface item : children)
+		{
+			Rectangle itemBox = item.getBoundingBox(g, observer, scale, style);
+			width = Math.max(width, itemBox.width);
+			height += itemBox.height;
+		}
+		return new Rectangle(0, 0, width, height);
+	}
+
+	@Override
+	public void draw(int x, int y, float scale, Graphics g, Style style, ImageObserver observer)
+	{
+		int currentY = y;
+		for (SlideItemInterface item : children)
+		{
+			Style itemStyle = Style.getStyle(item.getLevel()); // Ensure each item gets its own style
+			item.draw(x, currentY, scale, g, itemStyle, observer);
+			currentY += item.getBoundingBox(g, observer, scale, style).height;
+		}
+	}
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-public class TextItem extends SlideItem
+public class TextItem implements SlideItemInterface
 {
 	private String text;
 	private static final String EMPTYTEXT = "No Text Given";
@@ -20,7 +20,6 @@ public class TextItem extends SlideItem
 
 	public TextItem(int level, String string)
 	{
-		super(level);
 		text = string;
 		this.font = new Font("Arial", Font.PLAIN, 24); // Default font
 		this.color = Color.BLACK; // Default color
@@ -44,6 +43,7 @@ public class TextItem extends SlideItem
 	public void setFont(Font font)
 	{
 		this.font = font;
+		System.out.println("🔹 TextItem font updated to: " + font.getFontName() + " " + font.getSize());
 	}
 
 	public Color getColor()
@@ -54,6 +54,7 @@ public class TextItem extends SlideItem
 	public void setColor(Color color)
 	{
 		this.color = color;
+		System.out.println("🔹 TextItem color updated to: " + color);
 	}
 
 	public AttributedString getAttributedString(Style style, float scale)
@@ -67,6 +68,12 @@ public class TextItem extends SlideItem
 		attributedString.addAttribute(TextAttribute.SIZE, style.getFont(scale).getSize2D());
 		attributedString.addAttribute(TextAttribute.FOREGROUND, style.color);
 		return attributedString;
+	}
+
+	@Override
+	public int getLevel()
+	{
+		return 0;
 	}
 
 	@Override
@@ -85,21 +92,23 @@ public class TextItem extends SlideItem
 	@Override
 	public void draw(int x, int y, float scale, Graphics g, Style myStyle, ImageObserver observer)
 	{
-		if (text == null || text.isEmpty())
+		if (!(this instanceof TextItem))
 		{
-			return;
+			return; // Only apply styles to text items
 		}
-		List<TextLayout> layouts = getLayouts(g, myStyle, scale);
+
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setColor(color);
-		g2d.setFont(font);
-		int yOffset = y;
-		for (TextLayout layout : layouts)
-		{
-			yOffset += layout.getAscent();
-			layout.draw(g2d, x, yOffset);
-			yOffset += layout.getDescent() + layout.getLeading();
-		}
+		TextItem textItem = (TextItem) this;
+
+		// Retrieve the correct style for the text level
+		Style itemStyle = Style.getStyle(getLevel());
+
+		// Apply the correct font, size, and color
+		g2d.setFont(itemStyle.getFont(scale));
+		g2d.setColor(itemStyle.getColor());
+
+		// Draw the text
+		g2d.drawString(getText(), x, y);
 	}
 
 	private List<TextLayout> getLayouts(Graphics g, Style s, float scale)

@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -115,30 +116,6 @@ public class MenuController extends MenuBar {
 		});
 		add(fileMenu);
 
-		Menu editMenu = new Menu("Edit");
-
-		MenuItem addSlideMenuItem = mkMenuItem("New Slide");
-		addSlideMenuItem.addActionListener(e -> addNewSlide());
-		editMenu.add(addSlideMenuItem);
-
-		MenuItem textStyleItem = new MenuItem("Change Text Style");
-		textStyleItem.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				changeTextStyle();
-			}
-		});
-
-		editMenu.add(textStyleItem);
-
-		editMenu.add(menuItem = mkMenuItem(ADD_TEXT));
-		menuItem.addActionListener(e -> addText());
-
-		editMenu.add(menuItem = mkMenuItem(ADD_IMAGE));
-		menuItem.addActionListener(e -> addImage());
-
-		add(editMenu);
 		Menu viewMenu = new Menu(VIEW);
 		viewMenu.add(menuItem = mkMenuItem(NEXT));
 		menuItem.addActionListener(new ActionListener() {
@@ -179,74 +156,5 @@ public class MenuController extends MenuBar {
 		return new MenuItem(name, new MenuShortcut(name.charAt(0)));
 	}
 
-	private void addText()
-	{
-		String text = JOptionPane.showInputDialog(parent, "Enter text:");
-		if (text != null && !text.isEmpty())
-		{
-			Slide currentSlide = presentation.getCurrentSlide();
-			if (currentSlide == null)
-			{
-				currentSlide = new Slide();
-				presentation.append(currentSlide);
-			}
-			currentSlide.append(new TextItem(2, text));
-			parent.repaint();
-		}
-	}
-
-	private void addImage()
-	{
-		JFileChooser fileChooser = new JFileChooser();
-		int result = fileChooser.showOpenDialog(parent);
-		if (result == JFileChooser.APPROVE_OPTION)
-		{
-			String imagePath = fileChooser.getSelectedFile().getAbsolutePath();
-			Slide currentSlide = presentation.getCurrentSlide();
-			if (currentSlide == null)
-			{
-				currentSlide = new Slide();
-				presentation.append(currentSlide);
-			}
-			currentSlide.append(new BitmapItem(2, imagePath));
-			parent.repaint();
-		}
-	}
-
-	private void addNewSlide()
-	{
-		Slide newSlide = new Slide();
-		newSlide.setTitle("New Slide");
-
-		presentation.append(newSlide);
-		presentation.setSlideNumber(presentation.getSize() - 1); // Move to the new slide
-		parent.repaint();
-	}
-
-	private void changeTextStyle()
-	{
-		JFontChooser fontChooser = new JFontChooser();
-		int result = fontChooser.showDialog(null);
-
-		if (result == JFontChooser.OK_OPTION)
-		{
-			Font selectedFont = fontChooser.getSelectedFont();
-			Color selectedColor = fontChooser.getSelectedColor();
-
-			for (Slide slide : presentation.getShowList())
-			{
-				for (SlideItem item : slide.getSlideItems())
-				{
-					if (item instanceof TextItem)
-					{
-						((TextItem) item).setFont(selectedFont);
-						((TextItem) item).setColor(selectedColor);
-					}
-				}
-			}
-
-			presentation.updateView(); // Refresh the slide viewer
-		}
-	}
-
 }
+

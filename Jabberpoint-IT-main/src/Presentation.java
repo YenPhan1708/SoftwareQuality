@@ -1,5 +1,7 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Observer;
 
 
 /**
@@ -20,6 +22,7 @@ public class Presentation extends Observable
 	private ArrayList<Slide> showList = null; // an ArrayList with Slides
 	private int currentSlideNumber = 0; // the slidenummer of the current Slide
 	private SlideViewerComponent slideViewComponent = null; // the viewcomponent of the Slides
+	private Observer[] observers;
 
 	public Presentation()
 	{
@@ -30,6 +33,7 @@ public class Presentation extends Observable
 	public Presentation(SlideViewerComponent slideViewerComponent)
 	{
 		this.slideViewComponent = slideViewerComponent;
+		addObserver(slideViewerComponent);  // Make sure it's observing
 		clear();
 	}
 
@@ -135,6 +139,7 @@ public class Presentation extends Observable
 	// Give the current slide
 	public Slide getCurrentSlide()
 	{
+		System.out.println("🔹 Current Slide Index: " + currentSlideNumber);
 		return (currentSlideNumber >= 0 && currentSlideNumber < showList.size()) ? showList.get(currentSlideNumber) : null;
 	}
 
@@ -145,8 +150,17 @@ public class Presentation extends Observable
 
 	public void updateView()
 	{
+		System.out.println("🔹 updateView() called!");
+
 		setChanged();  // Mark the observable as changed
 		notifyObservers(getCurrentSlide());  // Notify observers with the current slide
+
+		JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this.slideViewComponent);
+		if (frame != null) {
+			frame.invalidate();
+			frame.validate();
+			frame.repaint();
+		}
 	}
 
 }

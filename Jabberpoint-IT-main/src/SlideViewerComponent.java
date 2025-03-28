@@ -39,6 +39,7 @@ public class SlideViewerComponent extends JComponent implements Observer
 
 	public SlideViewerComponent(Presentation pres, JFrame frame)
 	{
+		System.out.println("🔹 SlideViewerComponent initialized!");
 		setBackground(BGCOLOR); 
 		presentation = pres;
 		labelFont = new Font(FONTNAME, FONTSTYLE, FONTHEIGHT);
@@ -53,24 +54,33 @@ public class SlideViewerComponent extends JComponent implements Observer
 
 
 // draw the slide
-	public void paintComponent(Graphics g)
-	{
-		g.setColor(BGCOLOR);
-		g.fillRect(0, 0, getSize().width, getSize().height);
-		if (presentation.getSlideNumber() < 0 || slide == null) {
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		if (presentation == null || presentation.getCurrentSlide() == null) {
+			System.out.println("DEBUG: No presentation or slide to render.");
 			return;
 		}
-		g.setFont(labelFont);
-		g.setColor(COLOR);
-		g.drawString("Slide " + (1 + presentation.getSlideNumber()) + " of " +
-                 presentation.getSize(), XPOS, YPOS);
-		Rectangle area = new Rectangle(0, YPOS, getWidth(), (getHeight() - YPOS));
-		slide.draw(g, area, this);
+		int x = 50;  // Example X position for text
+		int y = 100; // Start drawing items at this Y position
+		float scale = 1.0f;
+
+		System.out.println("DEBUG: Rendering slide " + presentation.getCurrentSlide() + " with " +
+				presentation.getCurrentSlide().getSlideItems().size() + " items.");
+
+		for (SlideItemInterface item : presentation.getCurrentSlide().getSlideItems())
+		{
+			Style style = Style.getStyle(item.getLevel());
+			System.out.println("DEBUG: Drawing item at level " + item.getLevel() + " with text: " + item.toString());
+			item.draw(x, y, scale, g, style, this);
+			y += 50;  // Move down for next item		}
+		}
 	}
 
 	@Override
 	public void update(Observable observable, Object arg)
 	{
+		System.out.println("DEBUG: Updating SlideViewerComponent - Slide #" + presentation.getSlideNumber());
+
 		if (arg instanceof Slide)
 		{
 			this.slide = (Slide) arg;

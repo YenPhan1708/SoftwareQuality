@@ -127,45 +127,34 @@ public class XMLAccessor extends Accessor {
 
 	public void saveFile(Presentation presentation, String filename) throws IOException
 	{
-		PrintWriter out = new PrintWriter(new FileWriter(filename));
-		out.println("<?xml version=\"1.0\"?>");
-		out.println("<!DOCTYPE presentation SYSTEM \"jabberpoint.dtd\">");
-		out.println("<presentation>");
-		out.print("<showtitle>");
-		out.print(presentation.getTitle());
-		out.println("</showtitle>");
-		for (int slideNumber=0; slideNumber<presentation.getSize(); slideNumber++)
-		{
-			Slide slide = presentation.getSlide(slideNumber);
-			out.println("<slide>");
-			out.println("<title>" + slide.getTitle() + "</title>");
-			Vector<SlideItem> slideItems = slide.getSlideItems();
-			for (int itemNumber = 0; itemNumber<slideItems.size(); itemNumber++)
-			{
-				SlideItem slideItem = (SlideItem) slideItems.elementAt(itemNumber);
-				out.print("<item kind="); 
-				if (slideItem instanceof TextItem)
-				{
-					out.print("\"text\" level=\"" + slideItem.getLevel() + "\">");
-					out.print( ( (TextItem) slideItem).getText());
-				}
-				else
-				{
-					if (slideItem instanceof BitmapItem)
-					{
-						out.print("\"image\" level=\"" + slideItem.getLevel() + "\">");
-						out.print( ( (BitmapItem) slideItem).getName());
+		try (PrintWriter out = new PrintWriter(new FileWriter(filename))) {
+			out.println("<?xml version=\"1.0\"?>");
+			out.println("<!DOCTYPE presentation SYSTEM \"jabberpoint.dtd\">");
+			out.println("<presentation>");
+			out.printf("<showtitle>%s</showtitle>%n", presentation.getTitle());
+
+			for (int slideNumber = 0; slideNumber < presentation.getSize(); slideNumber++) {
+				Slide slide = presentation.getSlide(slideNumber);
+				out.println("<slide>");
+				out.printf("<title>%s</title>%n", slide.getTitle());
+
+				Vector<SlideItemInterface> slideItems = slide.getSlideItems();
+				for (SlideItemInterface slideItem : slideItems) {
+					if (slideItem instanceof TextItem) {
+						TextItem textItem = (TextItem) slideItem;
+						out.printf("<item kind=\"text\" level=\"%d\">%s</item>%n", textItem.getLevel(), textItem.getText());
 					}
-					else
-					{
-						System.out.println("Ignoring " + slideItem);
+					else if (slideItem instanceof BitmapItem) {
+						BitmapItem bitmapItem = (BitmapItem) slideItem;
+						out.printf("<item kind=\"image\" level=\"%d\">%s</item>%n", bitmapItem.getLevel(), bitmapItem.getImageName());
+					}
+					else {
+						System.err.println("Ignoring unknown slide item: " + slideItem);
 					}
 				}
-				out.println("</item>");
+				out.println("</slide>");
 			}
-			out.println("</slide>");
+			out.println("</presentation>");
 		}
-		out.println("</presentation>");
-		out.close();
 	}
 }

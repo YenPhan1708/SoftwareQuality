@@ -38,14 +38,27 @@ public class Style
 
 	public static Style getStyle(int level)
 	{
-		if (styles == null)
-		{
-			createStyles(); // Ensure styles are initialized
+		if (styles == null) {
+			createStyles();
 		}
-		if (level >= styles.length)
+
+		if (level < 0)
 		{
-			level = styles.length - 1;
+			level = 0;
 		}
+		else if (level >= styles.length)
+		{
+			level = styles.length - 1; // Prevent out-of-bounds access
+		}
+
+		Style style = styles[level];
+
+		// Debug output
+		System.out.println("DEBUG: Retrieved Style for level " + level +
+				" -> Font: " + style.font.getFontName() +
+				", Size: " + style.font.getSize() +
+				", Color: " + style.color);
+
 		return styles[level];
 	}
 
@@ -66,4 +79,42 @@ public class Style
 	{
 		return font.deriveFont(fontSize * scale);
 	}
+
+	public Color getColor()
+	{
+		return this.color;
+	}
+
+	public void setColor(Color color)
+	{
+		this.color = color;
+	}
+
+	public void setFont(Font font)
+	{
+		this.font = font;
+	}
+
+	public int getFontSize()
+	{
+		return this.fontSize;
+	}
+
+	public void setFontSize(int fontSize)
+	{
+		this.fontSize = fontSize;
+		this.font = new Font(FONTNAME, Font.BOLD, fontSize); // Update font when size changes
+	}
+
+	public int getLeading()
+	{
+		return this.leading;
+	}
+
+	public void setLeading(int leading)
+	{
+		this.leading = leading;
+	}
+
+
 }

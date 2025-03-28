@@ -20,18 +20,18 @@ import java.io.IOException;
  * @version 1.6 2014/05/16 Sylvia Stuurman
 */
 
-public class BitmapItem extends SlideItem
+public class BitmapItem implements SlideItemInterface
 {
-  private BufferedImage bufferedImage;
-  private String imageName;
-  
-  protected static final String FILE = "File ";
-  protected static final String NOTFOUND = " not found";
+	private int level;
+	private BufferedImage bufferedImage;
+	private String imageName;
+	protected static final String FILE = "File ";
+	protected static final String NOTFOUND = " not found";
 
 // level is equal to item-level; name is the name of the file with the Image
 	public BitmapItem(int level, String name)
 	{
-		super(level);
+		this.level = level;
 		imageName = name;
 		try
 		{
@@ -49,13 +49,38 @@ public class BitmapItem extends SlideItem
 		this(0, null);
 	}
 
-// give the filename of the image
-	public String getName()
+	@Override
+	public int getLevel()
 	{
-		return imageName;
+		return 0;
 	}
 
-// give the  bounding box of the image
+	public void setLevel(int level)
+	{
+		this.level = level;
+	}
+
+	public BufferedImage getBufferedImage()
+	{
+		return this.bufferedImage;
+	}
+
+	public void setBufferedImage(BufferedImage bufferedImage) {
+		this.bufferedImage = bufferedImage;
+	}
+
+	public String getImageName()
+	{
+		return this.imageName;
+	}
+
+	public void setImageName(String imageName)
+	{
+		this.imageName = imageName;
+	}
+
+	@Override
+	// Give the  bounding box of the image
 	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style myStyle)
 	{
 		if (bufferedImage == null)
@@ -66,6 +91,7 @@ public class BitmapItem extends SlideItem
 		int height = bufferedImage.getHeight(observer);
 		return new Rectangle(0, 0, (int) (width * scale), (int) (height * scale));	}
 
+	@Override
 	public void draw(int x, int y, float scale, Graphics g, Style myStyle, ImageObserver observer)
 	{
 		if (bufferedImage == null)
