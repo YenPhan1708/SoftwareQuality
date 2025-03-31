@@ -98,4 +98,92 @@ public class SlideTest {
         float scale = (float) m.invoke(slide, area);
         assertEquals(1.0f, scale, 0.01f);
     }
+
+    @Test
+    public void testAppendNullSlideItem() {
+        Slide slide = new Slide();
+        assertDoesNotThrow(() -> slide.append(null));
+        assertEquals(1, slide.getSize());
+        assertNull(slide.getSlideItem(0));
+    }
+
+    @Test
+    public void testAppendTextWithNullText() {
+        Slide slide = new Slide();
+        assertDoesNotThrow(() -> slide.append(1, null));
+        SlideItem item = slide.getSlideItem(0);
+        assertTrue(item instanceof TextItem);
+        assertNull(((TextItem) item).getText());
+    }
+
+    @Test
+    public void testAppendWithNegativeLevel() {
+        Slide slide = new Slide();
+        slide.append(-1, "Negative level test");
+        SlideItem item = slide.getSlideItem(0);
+        assertEquals(-1, item.getLevel());
+    }
+
+    @Test
+    public void testGetSlideItemWithNegativeIndexReturnsNull() {
+        Slide slide = new Slide();
+        assertNull(slide.getSlideItem(-1));
+    }
+
+    @Test
+    public void testGetSlideItemOutOfBoundsReturnsNull() {
+        Slide slide = new Slide();
+        slide.append(1, "Item A");
+        assertNull(slide.getSlideItem(2));
+    }
+
+    @Test
+    public void testSetTitleToNull() {
+        Slide slide = new Slide();
+        assertDoesNotThrow(() -> slide.setTitle(null));
+        assertNull(slide.getTitle());
+    }
+
+    @Test
+    public void testDrawWithNullObserverDoesNotThrow() {
+        Slide slide = new Slide();
+        slide.append(1, "Draw me");
+        Graphics g = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB).getGraphics();
+        Rectangle area = new Rectangle(0, 0, 800, 600);
+        assertDoesNotThrow(() -> slide.draw(g, area, null));
+    }
+
+    @Test
+    public void testDrawWithNoItemsDoesNotThrow() {
+        Slide slide = new Slide();
+        Graphics g = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB).getGraphics();
+        Rectangle area = new Rectangle(0, 0, 800, 600);
+        assertDoesNotThrow(() -> slide.draw(g, area, (img, f, x, y, w, h) -> true));
+    }
+    
+    @Test
+    public void testAddSameObserverTwiceDoesNotCrash() {
+        Slide slide = new Slide();
+        SlideObserver observer = s -> {};
+        slide.addObserver(observer);
+        slide.addObserver(observer);
+        assertDoesNotThrow(() -> slide.setTitle("Triggers notify"));
+    }
+
+    @Test
+    public void testRemoveUnregisteredObserverDoesNotCrash() {
+        Slide slide = new Slide();
+        SlideObserver observer = s -> {};
+        assertDoesNotThrow(() -> slide.removeObserver(observer));
+    }
+
+    @Test
+    public void testGetScaleHandlesVerySmallArea() throws Exception {
+        Slide slide = new Slide();
+        Method m = Slide.class.getDeclaredMethod("getScale", Rectangle.class);
+        m.setAccessible(true);
+        Rectangle smallArea = new Rectangle(0, 0, 10, 10);
+        float result = (float) m.invoke(slide, smallArea);
+        assertTrue(result > 0);
+    }
 }
