@@ -101,5 +101,93 @@ public class PresentationTest {
 
         assertDoesNotThrow(() -> method.invoke(presentation));
     }
+
+    @Test
+    public void testSetTitleToEmptyString() {
+        Presentation pres = new Presentation();
+        pres.setTitle("");
+        assertEquals("", pres.getTitle());
+    }
+
+    @Test
+    public void testSetTitleToNullDoesNotThrow() {
+        Presentation pres = new Presentation();
+        assertDoesNotThrow(() -> pres.setTitle(null));
+        assertNull(pres.getTitle());
+    }
+
+    @Test
+    public void testAppendNullSlideDoesNotThrow() {
+        Presentation pres = new Presentation();
+        assertDoesNotThrow(() -> pres.append(null));
+        assertEquals(1, pres.getSize());
+        assertNull(pres.getSlide(0));
+    }
+
+    @Test
+    public void testGetSlideWithNegativeIndexReturnsNull() {
+        Presentation pres = new Presentation();
+        assertNull(pres.getSlide(-1));
+    }
+
+    @Test
+    public void testGetSlideWithTooHighIndexReturnsNull() {
+        Presentation pres = new Presentation();
+        pres.append(new Slide());
+        assertNull(pres.getSlide(5));
+    }
+
+    @Test
+    public void testNextSlideWithOnlyOneSlideDoesNotOverflow() {
+        Presentation pres = new Presentation();
+        pres.append(new Slide());
+        pres.setSlideNumber(0);
+        pres.nextSlide();
+        assertEquals(0, pres.getSlideNumber()); // stays at 0
+    }
+
+    @Test
+    public void testPrevSlideAtFirstSlideDoesNotUnderflow() {
+        Presentation pres = new Presentation();
+        pres.append(new Slide());
+        pres.setSlideNumber(0);
+        pres.prevSlide();
+        assertEquals(0, pres.getSlideNumber()); // stays at 0
+    }
+
+    @Test
+    public void testNextSlideWithNoSlidesDoesNothing() {
+        Presentation pres = new Presentation();
+        pres.nextSlide();
+        assertEquals(-1, pres.getSlideNumber()); // initial default
+    }
+
+    @Test
+    public void testPrevSlideWithNoSlidesDoesNothing() {
+        Presentation pres = new Presentation();
+        pres.prevSlide();
+        assertEquals(-1, pres.getSlideNumber());
+    }
+
+    @Test
+    public void testGetCurrentSlideWhenNoneSetReturnsNull() {
+        Presentation pres = new Presentation();
+        assertNull(pres.getCurrentSlide());
+    }
+
+    @Test
+    public void testSetSlideNumberToInvalidNegativeValue() {
+        Presentation pres = new Presentation();
+        pres.append(new Slide());
+        pres.setSlideNumber(-5);
+        assertEquals(-5, pres.getSlideNumber());
+        assertNull(pres.getCurrentSlide());
+    }
+
+    @Test
+    public void testUpdateWithNullDoesNotThrow() {
+        Presentation pres = new Presentation();
+        assertDoesNotThrow(() -> pres.update(null));
+    }
 }
 

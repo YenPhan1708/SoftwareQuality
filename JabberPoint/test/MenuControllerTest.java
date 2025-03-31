@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.Frame;
 import java.awt.MenuItem;
+import java.awt.event.ActionListener;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,6 +33,44 @@ public class MenuControllerTest {
         assertNotNull(menuController); // Just ensures it initializes without crashing
     }
 
-    // Note: UI actions (clicks, dialogs) can't be tested without full GUI automation tools
+    @Test
+    public void testMkMenuItemWithNullLabelDoesNotThrow() {
+        assertDoesNotThrow(() -> {
+            MenuItem item = menuController.mkMenuItem(null);
+            assertNotNull(item);
+        });
+    }
+
+    @Test
+    public void testMkMenuItemWithEmptyString() {
+        MenuItem item = menuController.mkMenuItem("");
+        assertNotNull(item);
+        assertEquals("", item.getLabel());
+    }
+
+    @Test
+    public void testMkMenuItemCreatesUniqueInstances() {
+        MenuItem item1 = menuController.mkMenuItem("Item A");
+        MenuItem item2 = menuController.mkMenuItem("Item A");
+
+        assertNotSame(item1, item2);
+        assertEquals("Item A", item1.getLabel());
+        assertEquals("Item A", item2.getLabel());
+    }
+
+    @Test
+    public void testMenuItemHasActionListenerAttached() {
+        MenuItem item = menuController.mkMenuItem("Trigger");
+        ActionListener[] listeners = item.getActionListeners();
+
+        assertNotNull(listeners);
+        assertTrue(listeners.length > 0, "Expected action listener attached to menu item");
+    }
+
+    @Test
+    public void testMenuItemShortcutExists() {
+        MenuItem item = menuController.mkMenuItem("Something");
+        assertNotNull(item.getShortcut(), "Expected shortcut to be set");
+    }
 }
 
