@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SlideObserverTest {
@@ -45,5 +47,69 @@ public class SlideObserverTest {
 
         assertFalse(observer.isUpdated(), "Removed observer should not be notified");
     }
+    @Test
+    public void testMultipleObserversAreCalled() {
+        Slide slide = new Slide();
+
+        AtomicInteger callCount = new AtomicInteger(0);
+
+        SlideObserver obs1 = s -> callCount.incrementAndGet();
+        SlideObserver obs2 = s -> callCount.incrementAndGet();
+
+        slide.addObserver(obs1);
+        slide.addObserver(obs2);
+
+        slide.setTitle("Notify all");
+
+        assertEquals(2, callCount.get());
+    }
+
+    @Test
+    public void testSameObserverCalledTwiceIfAddedTwice() {
+        Slide slide = new Slide();
+        AtomicInteger callCount = new AtomicInteger(0);
+
+        SlideObserver observer = s -> callCount.incrementAndGet();
+        slide.addObserver(observer);
+        slide.addObserver(observer);
+
+        slide.setTitle("Trigger");
+
+        assertEquals(2, callCount.get());
+    }
+
+    @Test
+    public void testRemoveObserverMultipleTimesIsSafe() {
+        Slide slide = new Slide();
+        SlideObserver observer = s -> {};
+        slide.addObserver(observer);
+
+        slide.removeObserver(observer);
+        assertDoesNotThrow(() -> slide.removeObserver(observer)); // no crash
+    }
+
+    @Test
+    public void testObserverReceivesUpdatedSlideState() {
+        Slide slide = new Slide();
+
+        SlideObserver observer = s -> assertEquals("Live Update", s.getTitle());
+        slide.addObserver(observer);
+
+        slide.setTitle("Live Update");
+    }
+
+    @Test
+    public void testObserverThrowingExceptionDoesNotCrashNotify() {
+        Slide slide = new Slide();
+        SlideObserver badObserver = s -> { throw new RuntimeException("oops"); };
+        SlideObserver goodObserver = s -> assertTrue(true);
+
+        slide.addObserver(badObserver);
+        slide.addObserver(goodObserver);
+
+        // Simulate safe notify without crash
+        assertDoesNotThrow(() -> slide.setTitle("Safe notify"));
+    }
+
 }
 
