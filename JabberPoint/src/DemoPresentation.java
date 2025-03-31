@@ -8,7 +8,7 @@
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-class DemoPresentation implements Accessor
+public class DemoPresentation implements Accessor
 {
 
 	public void loadFile(Presentation presentation, String unusedFilename) {
