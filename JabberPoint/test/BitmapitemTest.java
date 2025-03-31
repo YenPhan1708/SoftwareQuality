@@ -57,4 +57,63 @@ public class BitmapitemTest {
 
         assertDoesNotThrow(() -> bitmapItem.draw(10, 10, 1.0f, dummyGraphics, style, dummyObserver));
     }
+
+    @Test
+    public void testImageNameCanBeNull() {
+        BitmapItem item = new BitmapItem();
+        item.setImageName(null);
+        assertNull(item.getImageName());
+        assertTrue(item.toString().contains("BitmapItem"));
+    }
+
+    @Test
+    public void testBufferedImageCanBeNull() {
+        BitmapItem item = new BitmapItem();
+        item.setBufferedImage(null);
+        assertNull(item.getBufferedImage());
+    }
+
+    @Test
+    public void testGetBoundingBoxWithNullImageReturnsZeroBox() {
+        BitmapItem item = new BitmapItem();
+        item.setBufferedImage(null); // no image
+
+        Graphics g = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).getGraphics();
+        Style style = Style.getStyle(1);
+
+        Rectangle box = item.getBoundingBox(g, null, 1.0f, style);
+        assertEquals(0, box.width);
+        assertEquals(0, box.height);
+    }
+
+    @Test
+    public void testDrawWithNullObserverDoesNotThrow() {
+        BitmapItem item = new BitmapItem();
+        item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
+
+        Graphics g = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB).getGraphics();
+        Style style = Style.getStyle(1);
+
+        assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, g, style, null));
+    }
+
+    @Test
+    public void testDrawWithNullGraphicsThrowsNullPointerException() {
+        BitmapItem item = new BitmapItem();
+        item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
+        Style style = Style.getStyle(1);
+        ImageObserver observer = (img, flags, x, y, w, h) -> true;
+
+        assertThrows(NullPointerException.class, () -> item.draw(0, 0, 1.0f, null, style, observer));
+    }
+
+    @Test
+    public void testDrawWithNullStyleDoesNotThrow() {
+        BitmapItem item = new BitmapItem();
+        item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
+        Graphics g = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB).getGraphics();
+        ImageObserver observer = (img, flags, x, y, w, h) -> true;
+
+        assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, g, null, observer));
+    }
 }

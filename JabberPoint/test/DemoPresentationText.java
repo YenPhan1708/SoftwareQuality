@@ -34,4 +34,28 @@ public class DemoPresentationText {
             demoPresentation.saveFile(presentation, "anything.xml");
         });
     }
+
+    @Test
+    public void testLoadFileWithNullFilename() {
+        assertDoesNotThrow(() -> demoPresentation.loadFile(presentation, null));
+        assertEquals(3, presentation.getSize());  // Still loads demo
+    }
+
+    @Test
+    public void testLoadFileWithNullPresentation() {
+        assertThrows(NullPointerException.class, () -> demoPresentation.loadFile(null, "anything.xml"));
+    }
+
+    @Test
+    public void testLoadFileTwiceResetsSlides() throws IOException {
+        demoPresentation.loadFile(presentation, "");
+        int firstLoadCount = presentation.getSize();
+
+        demoPresentation.loadFile(presentation, "");
+        int secondLoadCount = presentation.getSize();
+
+        assertEquals(firstLoadCount, secondLoadCount);
+        assertEquals("Demo Presentation", presentation.getTitle());
+    }
+
 }

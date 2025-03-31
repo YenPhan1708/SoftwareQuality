@@ -48,5 +48,23 @@ public class XMLAccessorTest {
         assertEquals(1, loaded.getSize());
         assertEquals("RoundTrip Slide", loaded.getSlide(0).getTitle());
     }
+
+    @Test
+    public void testSaveEmptyPresentationDoesNotThrow() {
+        Presentation emptyPres = new Presentation();
+        assertDoesNotThrow(() -> accessor.saveFile(emptyPres, "empty.xml"));
+    }
+
+    @Test
+    public void testSaveFileWithNullFilenameThrows() {
+        Presentation pres = new Presentation();
+        assertThrows(NullPointerException.class, () -> accessor.saveFile(pres, null));
+    }
+
+    @Test
+    public void testLoadFileWithNullPresentationThrows() {
+        assertThrows(NullPointerException.class, () -> accessor.loadFile(null, "file.xml"));
+    }
+
 }
 
