@@ -160,7 +160,7 @@ public class SlideTest {
         Rectangle area = new Rectangle(0, 0, 800, 600);
         assertDoesNotThrow(() -> slide.draw(g, area, (img, f, x, y, w, h) -> true));
     }
-    
+
     @Test
     public void testAddSameObserverTwiceDoesNotCrash() {
         Slide slide = new Slide();
