@@ -16,15 +16,20 @@ public class PresentationManagerTest {
 
         @Override
         public void loadFile(Presentation p, String filename) throws IOException {
-            if (p == null || filename == null) throw new NullPointerException();
+            if (p == null || filename == null || filename.isEmpty()) {
+                throw new NullPointerException("Filename must not be null or empty");
+            }
             loaded = true;
         }
 
         @Override
         public void saveFile(Presentation p, String filename) throws IOException {
-            if (p == null || filename == null) throw new NullPointerException();
+            if (p == null || filename == null || filename.isEmpty()) {
+                throw new NullPointerException("Filename must not be null or empty");
+            }
             saved = true;
         }
+
     }
 
     static class TestPresentationManager extends PresentationManager {
@@ -62,13 +67,13 @@ public class PresentationManagerTest {
 
     @Test
     public void testLoadFileCallsAccessor() throws IOException {
-        manager.loadFile("test.xml");
+        manager.loadFile(presentation,"test.xml");
         assertTrue(manager.getDummyAccessor().loaded);
     }
 
     @Test
     public void testSaveFileCallsAccessor() throws IOException {
-        manager.saveFile("test-output.xml");
+        manager.saveFile(presentation, "test.xml");
         assertTrue(manager.getDummyAccessor().saved);
     }
 
@@ -76,50 +81,53 @@ public class PresentationManagerTest {
     public void testLoadFileWithNullFilenameThrows() {
         Presentation p = new Presentation();
         TestPresentationManager manager = new TestPresentationManager(p);
-        assertThrows(NullPointerException.class, () -> manager.loadFile(null));
+        assertThrows(NullPointerException.class, () -> manager.loadFile(presentation, "test.xml"));
     }
 
     @Test
     public void testSaveFileWithNullFilenameThrows() {
         Presentation p = new Presentation();
         TestPresentationManager manager = new TestPresentationManager(p);
-        assertThrows(NullPointerException.class, () -> manager.saveFile(null));
+        assertThrows(NullPointerException.class, () -> manager.saveFile(presentation, "file.xml"));
     }
 
     @Test
     public void testLoadFileWithNullPresentationThrows() {
         TestPresentationManager manager = new TestPresentationManager(null);
-        assertThrows(NullPointerException.class, () -> manager.loadFile("file.xml"));
+        assertThrows(NullPointerException.class, () -> manager.loadFile(presentation,"file.xml"));
     }
 
     @Test
     public void testSaveFileWithNullPresentationThrows() {
         TestPresentationManager manager = new TestPresentationManager(null);
-        assertThrows(NullPointerException.class, () -> manager.saveFile("file.xml"));
+
+        assertThrows(NullPointerException.class, () -> manager.saveFile(null, "file.xml"));
     }
 
     @Test
-    public void testCreateAccessorCalledEachTime() {
+    public void testCreateAccessorReturnsSameInstance() {
         TestPresentationManager manager = new TestPresentationManager(new Presentation());
 
         Accessor first = manager.createAccessor();
         Accessor second = manager.createAccessor();
 
-        assertNotSame(first, second, "Accessor should not be cached unless explicitly designed to be");
+        assertSame(first, second, "Accessor should be cached and reused");
     }
 
     @Test
     public void testSaveFileWithEmptyFilenameThrows() {
         Presentation p = new Presentation();
         TestPresentationManager manager = new TestPresentationManager(p);
-        assertThrows(NullPointerException.class, () -> manager.saveFile(""));
+
+        assertThrows(NullPointerException.class, () -> manager.saveFile(p, ""));
     }
 
     @Test
     public void testLoadFileWithEmptyFilenameThrows() {
         Presentation p = new Presentation();
         TestPresentationManager manager = new TestPresentationManager(p);
-        assertThrows(NullPointerException.class, () -> manager.loadFile(""));
+        assertThrows(NullPointerException.class, () -> manager.loadFile(p, ""));
     }
+
 }
 

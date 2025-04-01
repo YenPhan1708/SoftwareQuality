@@ -117,11 +117,9 @@ public class PresentationTest {
     }
 
     @Test
-    public void testAppendNullSlideDoesNotThrow() {
+    public void testAppendNullSlideThrows() {
         Presentation pres = new Presentation();
-        assertDoesNotThrow(() -> pres.append(null));
-        assertEquals(1, pres.getSize());
-        assertNull(pres.getSlide(0));
+        assertThrows(NullPointerException.class, () -> pres.append(null));
     }
 
     @Test

@@ -14,15 +14,10 @@ public class BitmapItemTest
 
     @BeforeEach
     public void setup() {
-        bitmapItem = new BitmapItem();
-
-        bitmapItem.setImageName("serclogo_fc.jpg");
-
-        // simulate loading
-        BufferedImage dummyImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
-        bitmapItem.setBufferedImage(dummyImage);
-        bitmapItem.setLevel(2);
+        bitmapItem = new BitmapItem(2, "serclogo_fc.jpg");
+        bitmapItem.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
     }
+
 
     @Test
     public void testToStringContainsClassAndFilename() {
@@ -33,6 +28,8 @@ public class BitmapItemTest
 
     @Test
     public void testBoundingBoxCalculation() {
+        Style.createStyles();
+
         ImageObserver dummyObserver = (img, flags, x, y, w, h) -> true;
         Graphics dummyGraphics = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).getGraphics();
         Style style = Style.getStyle(2);
@@ -40,14 +37,15 @@ public class BitmapItemTest
         Rectangle box = bitmapItem.getBoundingBox(dummyGraphics, dummyObserver, 1.0f, style);
         assertEquals((int)(style.indent * 1.0f), box.x);
         assertEquals(100, box.width); // image width
-        assertEquals(style.leading + 50, box.height); // style leading + image height
+        assertEquals(style.leading + 50, box.height);
     }
 
     @Test
-    public void testDrawDoesNotThrow()
-    {
+    public void testDrawDoesNotThrow() {
+        Style.createStyles();
+
         Graphics dummyGraphics = new BufferedImage(200, 100, BufferedImage.TYPE_INT_ARGB).getGraphics();
-        ImageObserver dummyObserver =(img, flags, x, y, w, h)->true;
+        ImageObserver dummyObserver = (img, flags, x, y, w, h) -> true;
         Style style = Style.getStyle(2);
 
         assertDoesNotThrow(() -> bitmapItem.draw(10, 10, 1.0f, dummyGraphics, style, dummyObserver));
@@ -56,33 +54,33 @@ public class BitmapItemTest
     @Test
     public void testImageNameCanBeNull()
     {
-        BitmapItem item = new BitmapItem();
+        BitmapItem item = new BitmapItem(0, "serclogo_fc.jpg");
         item.setImageName(null);
+
         assertNull(item.getImageName());
         assertTrue(item.toString().contains("BitmapItem"));
     }
 
     @Test
-    public void testBufferedImageCanBeNull()
-    {
-        BitmapItem item = new BitmapItem();
+    public void testBufferedImageCanBeNull() {
+        BitmapItem item = new BitmapItem(0, "serclogo_fc.jpg");
         item.setBufferedImage(null);
         assertNull(item.getBufferedImage());
     }
 
-    @Test
-    public void testGetBoundingBoxWithNullImageReturnsZeroBox()
-    {
-        BitmapItem item = new BitmapItem();
-        item.setBufferedImage(null); // no image
 
+    @Test
+    public void testGetBoundingBoxWithNullImageThrows() {
+        Style.createStyles();
+        BitmapItem item = new BitmapItem(1, "serclogo_fc.jpg");
+        item.setBufferedImage(null);
         Graphics g = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).getGraphics();
         Style style = Style.getStyle(1);
-
-        Rectangle box = item.getBoundingBox(g, null, 1.0f, style);
-        assertEquals(0, box.width);
-        assertEquals(0, box.height);
+        ImageObserver observer = (img, flags, x, y, width, height) -> true;
+        assertThrows(NullPointerException.class, () ->
+                item.getBoundingBox(g, observer, 1.0f, style));
     }
+
 
     @Test
     public void testDrawWithNullObserverDoesNotThrow() {
