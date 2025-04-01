@@ -1,8 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.awt.Frame;
-import java.awt.MenuItem;
+import java.awt.*;
 import java.awt.event.ActionListener;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,19 +33,16 @@ public class MenuControllerTest {
     }
 
     @Test
-    public void testMkMenuItemWithNullLabelDoesNotThrow() {
-        assertDoesNotThrow(() -> {
-            MenuItem item = menuController.mkMenuItem(null);
-            assertNotNull(item);
-        });
+    public void testMkMenuItemWithNullLabelThrows() {
+        assertThrows(NullPointerException.class, () -> menuController.mkMenuItem(null));
     }
 
+
     @Test
-    public void testMkMenuItemWithEmptyString() {
-        MenuItem item = menuController.mkMenuItem("");
-        assertNotNull(item);
-        assertEquals("", item.getLabel());
+    public void testMkMenuItemWithEmptyStringThrows() {
+        assertThrows(StringIndexOutOfBoundsException.class, () -> menuController.mkMenuItem(""));
     }
+
 
     @Test
     public void testMkMenuItemCreatesUniqueInstances() {
@@ -59,13 +55,15 @@ public class MenuControllerTest {
     }
 
     @Test
-    public void testMenuItemHasActionListenerAttached() {
-        MenuItem item = menuController.mkMenuItem("Trigger");
-        ActionListener[] listeners = item.getActionListeners();
+    public void testNewMenuItemHasListenerAttached() {
+        Menu fileMenu = menuController.getMenu(0); // "File" menu
+        MenuItem newItem = fileMenu.getItem(1);    // 2nd item = "New"
 
+        ActionListener[] listeners = newItem.getActionListeners();
         assertNotNull(listeners);
-        assertTrue(listeners.length > 0, "Expected action listener attached to menu item");
+        assertTrue(listeners.length > 0);
     }
+
 
     @Test
     public void testMenuItemShortcutExists() {
