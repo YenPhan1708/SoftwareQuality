@@ -133,7 +133,7 @@ public class StyleTest {
         assertNotNull(result);
         assertTrue(result.contains("20"));
     }
-    
+
     // Helper method
     private Style[] getStylesArray() {
         try {
