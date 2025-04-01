@@ -48,4 +48,63 @@ public class SlideViewerComponentTest {
         Graphics g = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
         assertDoesNotThrow(() -> component.paintComponent(g));
     }
+
+    @Test
+    public void testUpdateWithNullSlideDoesNotThrow() {
+        assertDoesNotThrow(() -> component.update(null));
+    }
+
+    @Test
+    public void testPaintComponentWithNullGraphicsThrows() {
+        assertThrows(NullPointerException.class, () -> component.paintComponent(null));
+    }
+
+    @Test
+    public void testUpdateWithMultipleSlidesSequentially() {
+        for (int i = 0; i < 5; i++) {
+            Slide slide = new Slide();
+            slide.setTitle("Slide " + i);
+            slide.append(1, "Content " + i);
+            assertDoesNotThrow(() -> component.update(slide));
+        }
+    }
+
+    @Test
+    public void testPaintComponentWithLargeSlideContent() {
+        Slide bigSlide = new Slide();
+        bigSlide.setTitle("Big One");
+        for (int i = 0; i < 50; i++) {
+            bigSlide.append(1, "Item " + i);
+        }
+
+        component.update(bigSlide);
+
+        Graphics g = new BufferedImage(1600, 1200, BufferedImage.TYPE_INT_ARGB).getGraphics();
+        assertDoesNotThrow(() -> component.paintComponent(g));
+    }
+
+    @Test
+    public void testPaintComponentWithTinyResolution() {
+        Slide slide = new Slide();
+        slide.setTitle("Tiny Draw");
+        slide.append(1, "Item");
+
+        component.update(slide);
+
+        Graphics g = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB).getGraphics();
+        assertDoesNotThrow(() -> component.paintComponent(g));
+    }
+
+    @Test
+    public void testUpdateAndDrawQuicklyInLoop() {
+        for (int i = 0; i < 3; i++) {
+            Slide slide = new Slide();
+            slide.setTitle("Quick " + i);
+            slide.append(1, "Text " + i);
+            component.update(slide);
+
+            Graphics g = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB).getGraphics();
+            assertDoesNotThrow(() -> component.paintComponent(g));
+        }
+    }
 }
