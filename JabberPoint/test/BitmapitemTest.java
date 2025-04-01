@@ -15,7 +15,7 @@ public class BitmapitemTest {
     @BeforeEach
     public void setup() {
         bitmapItem = new BitmapItem();
-        bitmapItem.setImageName("test-image.png");
+        bitmapItem.setImageName("serclogo_fc.jpg");
 
         // simulate loading
         BufferedImage dummyImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
@@ -25,7 +25,7 @@ public class BitmapitemTest {
 
     @Test
     public void testGettersAndSetters() {
-        assertEquals("test.png", bitmapItem.getImageName());
+        assertEquals("serclogo_fc.jpg", bitmapItem.getImageName());
         assertNull(bitmapItem.getBufferedImage());
         assertEquals(2, bitmapItem.getLevel());
     }
@@ -34,7 +34,7 @@ public class BitmapitemTest {
     public void testToStringContainsClassAndFilename() {
         String result = bitmapItem.toString();
         assertTrue(result.contains("BitmapItem"));
-        assertTrue(result.contains("test-image.png"));
+        assertTrue(result.contains("serclogo_fc.jpg"));
     }
 
     @Test
