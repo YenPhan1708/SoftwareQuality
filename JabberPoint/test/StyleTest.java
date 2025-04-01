@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,6 +69,80 @@ public class StyleTest {
     @Test
     public void testCreateAccessorReturnsXMLAccessor() {
         assertTrue(style.createAccessor() instanceof XMLAccessor);
+    }
+
+    @Test
+    public void testGetFontWithZeroScaleReturnsZeroSizeFont() {
+        Style style = new Style(10, Color.BLACK, 0, 10);
+        Font font = style.getFont(0.0f);
+        assertEquals(0, font.getSize());
+    }
+
+    @Test
+    public void testGetFontWithNegativeScaleReturnsNegativeFontSize() {
+        Style style = new Style(10, Color.BLACK, 30, 10);
+        Font font = style.getFont(-1.0f);
+        assertEquals(-30, font.getSize());
+    }
+
+    @Test
+    public void testGetFontWithVeryLargeScale() {
+        Style style = new Style(10, Color.BLACK, 5, 10);
+        Font font = style.getFont(100.0f);
+        assertEquals(500, font.getSize());
+    }
+
+    @Test
+    public void testGetStyleWithNegativeLevelReturnsFallback() {
+        Style.createStyles();
+        Style style = Style.getStyle(-5);
+        assertNotNull(style);
+        assertEquals(Color.black, style.color);
+    }
+
+    @Test
+    public void testGetStyleWithExcessivelyHighLevelReturnsFallback() {
+        Style.createStyles();
+        Style style = Style.getStyle(999);
+        assertNotNull(style);
+        assertEquals(Color.black, style.color);
+    }
+
+    @Test
+    public void testCreateStylesIsIdempotent() {
+        Style.createStyles();
+        Style[] first = getStylesArray();
+        Style.createStyles();
+        Style[] second = getStylesArray();
+        assertArrayEquals(first, second);
+    }
+
+    @Test
+    public void testToStringHandlesNullColorAndFontGracefully() throws Exception {
+        Style style = new Style(20, Color.RED, 30, 10);
+
+        Field colorField = Style.class.getDeclaredField("color");
+        Field fontField = Style.class.getDeclaredField("font");
+        colorField.setAccessible(true);
+        fontField.setAccessible(true);
+
+        colorField.set(style, null);
+        fontField.set(style, null);
+
+        String result = style.toString();
+        assertNotNull(result);
+        assertTrue(result.contains("20"));
+    }
+    
+    // Helper method
+    private Style[] getStylesArray() {
+        try {
+            Field f = Style.class.getDeclaredField("styles");
+            f.setAccessible(true);
+            return (Style[]) f.get(null);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
 

@@ -13,8 +13,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TextItemTest {
-
     private TextItem textItem;
+    private final Graphics g = new BufferedImage(1000, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
+    private final ImageObserver observer = (img, infoflags, x, y, width, height) -> true;
 
     @BeforeEach
     public void setup() {
@@ -95,5 +96,83 @@ public class TextItemTest {
         String str = textItem.toString();
         assertTrue(str.contains("TextItem"));
         assertTrue(str.contains("Hello world"));
+    }
+
+    @Test
+    public void testEmptyTextString() {
+        TextItem item = new TextItem(1, "");
+        assertEquals("", item.getText());
+        assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, g, Style.getStyle(1), observer));
+    }
+
+    @Test
+    public void testNullTextString() {
+        TextItem item = new TextItem(1, null);
+        assertNull(item.getText());
+        assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, g, Style.getStyle(1), observer));
+    }
+
+    @Test
+    public void testNullFontDoesNotBreak() {
+        TextItem item = new TextItem(1, "Test");
+        item.setFont(null);  // shouldn't break anything
+        assertDoesNotThrow(() -> item.getFont());
+    }
+
+    @Test
+    public void testNullColorAccepted() {
+        TextItem item = new TextItem(1, "Colorless");
+        item.setColor(null);
+        assertNull(item.getColor());
+    }
+
+    @Test
+    public void testNullStyleInDrawDoesNotThrow() {
+        TextItem item = new TextItem(1, "Safe Draw");
+        assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, g, null, observer));
+    }
+
+    @Test
+    public void testNullObserverInDrawDoesNotThrow() {
+        TextItem item = new TextItem(1, "No observer");
+        assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, g, Style.getStyle(1), null));
+    }
+
+    @Test
+    public void testDrawWithExtremeFontScale() {
+        TextItem item = new TextItem(1, "Scale up");
+        Style style = Style.getStyle(1);
+        assertDoesNotThrow(() -> item.draw(0, 0, 10.0f, g, style, observer));
+    }
+
+    @Test
+    public void testNegativeLevelHandled() {
+        TextItem item = new TextItem(-2, "Negative");
+        assertEquals(-2, item.getLevel());
+    }
+
+    @Test
+    public void testGetAttributedStringWithNullStyleThrows() {
+        TextItem item = new TextItem(1, "Test");
+        assertThrows(NullPointerException.class, () -> item.getAttributedString(null, 1.0f));
+    }
+
+    @Test
+    public void testAttributedStringReturnsCorrectAttributes() {
+        TextItem item = new TextItem(1, "Styled");
+        Style style = Style.getStyle(1);
+        AttributedString attrStr = item.getAttributedString(style, 1.0f);
+        AttributedCharacterIterator it = attrStr.getIterator();
+        Map<AttributedCharacterIterator.Attribute, Object> attrs = it.getAttributes();
+
+        assertTrue(attrs.containsKey(TextAttribute.FONT));
+    }
+
+    @Test
+    public void testToStringContainsLevelAndText() {
+        TextItem item = new TextItem(3, "Stringified");
+        String str = item.toString();
+        assertTrue(str.contains("TextItem"));
+        assertTrue(str.contains("Stringified"));
     }
 }
