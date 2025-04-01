@@ -84,7 +84,9 @@ public class BitmapItemTest
 
     @Test
     public void testDrawWithNullObserverDoesNotThrow() {
-        BitmapItem item = new BitmapItem();
+        Style.createStyles();
+
+        BitmapItem item = new BitmapItem(1, "serclogo_fc.jpg");
         item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
 
         Graphics g = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB).getGraphics();
@@ -93,25 +95,30 @@ public class BitmapItemTest
         assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, g, style, null));
     }
 
+
     @Test
-    public void testDrawWithNullGraphicsThrowsNullPointerException()
-    {
-        BitmapItem item = new BitmapItem();
+    public void testDrawWithNullGraphicsThrowsNullPointerException() {
+        Style.createStyles();
+        BitmapItem item = new BitmapItem(1, "serclogo_fc.jpg");
         item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
+
         Style style = Style.getStyle(1);
         ImageObserver observer = (img, flags, x, y, w, h) -> true;
 
         assertThrows(NullPointerException.class, () -> item.draw(0, 0, 1.0f, null, style, observer));
     }
 
+
     @Test
-    public void testDrawWithNullStyleDoesNotThrow()
-    {
-        BitmapItem item = new BitmapItem();
+    public void testDrawWithNullStyleThrows() {
+        BitmapItem item = new BitmapItem(1, "serclogo_fc.jpg");
         item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
+
         Graphics g = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB).getGraphics();
         ImageObserver observer = (img, flags, x, y, w, h) -> true;
 
-        assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, g, null, observer));
+        assertThrows(NullPointerException.class, () -> item.draw(0, 0, 1.0f, g, null, observer));
     }
+
+
 }
