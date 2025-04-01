@@ -10,7 +10,7 @@
 
 public class DemoPresentation implements Accessor
 {
-
+	@Override
 	public void loadFile(Presentation presentation, String unusedFilename) {
 		presentation.setTitle("Demo Presentation");
 		Slide slide;
@@ -49,6 +49,7 @@ public class DemoPresentation implements Accessor
 		presentation.append(slide);
 	}
 
+	@Override
 	public void saveFile(Presentation presentation, String unusedFilename) {
 		throw new IllegalStateException("Save As->Demo! called");
 	}

@@ -63,7 +63,8 @@ public class CollectionItem implements SlideItem
 
         int yOffset = y;  // Track the Y position for stacking items
 
-        for (int i = 0; i < children.size(); i++) {
+        for (int i = 0; i < children.size(); i++)
+        {
             SlideItem item = children.get(i);
             Style itemStyle = itemStyles.get(i);  // Get stored style for this item
 

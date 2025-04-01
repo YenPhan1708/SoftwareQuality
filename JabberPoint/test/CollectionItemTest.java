@@ -16,7 +16,8 @@ public class CollectionItemTest {
     private final ImageObserver observer = (img, flags, x, y, w, h) -> true;
 
     @BeforeEach
-    public void setup() {
+    public void setup()
+    {
         collection = new CollectionItem(1);
     }
 
@@ -61,7 +62,8 @@ public class CollectionItemTest {
     }
 
     @Test
-    public void testBoundingBoxReturnsNonNull() {
+    public void testBoundingBoxReturnsNonNull()
+    {
         Graphics g = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
         ImageObserver observer = (img, flags, x, y, w, h) -> true;
         Style style = Style.getStyle(1);
@@ -76,7 +78,8 @@ public class CollectionItemTest {
     }
 
     @Test
-    public void testSetStyleDoesNotThrow() {
+    public void testSetStyleDoesNotThrow()
+    {
         Style style = Style.getStyle(1);
 
         TextItem textItem = new TextItem(1, "Styled");
