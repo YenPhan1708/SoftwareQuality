@@ -19,9 +19,9 @@ class DemoPresentation implements Accessor
 		slide.append(1, "The Java Presentation Tool");
 		slide.append(2, "Copyright (c) 1996-2000: Ian Darwin");
 		slide.append(2, "Copyright (c) 2000-now:");
-		slide.append(2, "Gert Florijn andn Sylvia Stuurman");
+		slide.append(2, "Gert Florijn and Sylvia Stuurman");
 		slide.append(4, "Starting JabberPoint without a filename");
-		slide.append(4, "shows this presentation");
+		slide.append(4, "Shows this presentation");
 		slide.append(1, "Navigate:");
 		slide.append(3, "Next slide: PgDn or Enter");
 		slide.append(3, "Previous slide: PgUp or up-arrow");
@@ -29,7 +29,7 @@ class DemoPresentation implements Accessor
 		presentation.append(slide);
 
 		slide = new Slide();
-		slide.setTitle("Demonstration of levels and stijlen");
+		slide.setTitle("Demonstration of levels and styles");
 		slide.append(1, "Level 1");
 		slide.append(2, "Level 2");
 		slide.append(1, "Again level 1");
@@ -42,7 +42,7 @@ class DemoPresentation implements Accessor
 		slide = new Slide();
 		slide.setTitle("The third slide");
 		slide.append(1, "To open a new presentation,");
-		slide.append(2, "use File->Open from the menu.");
+		slide.append(2, "Use File->Open from the menu.");
 		slide.append(1, " ");
 		slide.append(1, "This is the end of the presentation.");
 		slide.append(new BitmapItem(1, "JabberPoint.jpg"));

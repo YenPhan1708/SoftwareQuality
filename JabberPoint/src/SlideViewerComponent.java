@@ -1,8 +1,4 @@
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
@@ -27,7 +23,7 @@ public class SlideViewerComponent extends JComponent implements SlideObserver
 	
 	private static final long serialVersionUID = 227L;
 	
-	private static final Color BGCOLOR = Color.white;
+	private static final Color BGCOLOR =  Color.white;
 	private static final Color COLOR = Color.black;
 	private static final String FONTNAME = "Dialog";
 	private static final int FONTSTYLE = Font.BOLD;
@@ -74,17 +70,55 @@ public class SlideViewerComponent extends JComponent implements SlideObserver
 // draw the slide
 	public void paintComponent(Graphics g)
 	{
-		g.setColor(BGCOLOR);
-		g.fillRect(0, 0, getSize().width, getSize().height);
-		if (presentation.getSlideNumber() < 0 || slide == null) {
-			return;
+		Color pastelPink = new Color(237, 176, 200); // Pastel Pink for background
+		Color whiteColor = Color.WHITE; // White for main content
+		Color borderColor = Color.LIGHT_GRAY; // Slightly darker pink for border
+
+		// Fill Background
+		g.setColor(pastelPink);
+		g.fillRect(0, 0, getWidth(), getHeight());
+
+		// Define Main Content Area
+		int margin = 35;  // Space around the main content
+		int borderRadius = 7; // Curve radius
+
+		int contentX = margin;
+		int contentY = margin;
+		int contentWidth = getWidth() - 2 * margin;
+		int contentHeight = getHeight() - 2 * margin;
+
+		// Draw Main Content Background
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		g2.setColor(whiteColor);
+		g2.fillRoundRect(contentX, contentY, contentWidth, contentHeight, borderRadius * 2, borderRadius * 2);
+
+		// Draw Border
+		g2.setColor(borderColor);
+		g2.setStroke(new BasicStroke(2)); // Border thickness
+		g2.drawRoundRect(contentX, contentY, contentWidth, contentHeight, borderRadius * 2, borderRadius * 2);
+
+		// Draw Slide Content Inside (Existing Code)
+		if (presentation.getSlideNumber() >= 0 && slide != null) {
+			g2.setFont(labelFont);
+			g2.setColor(COLOR);
+
+			// Move slide number to bottom-right of the main content
+			String slideText = "Slide " + (1 + presentation.getSlideNumber()) + " of " + presentation.getSize();
+			FontMetrics fm = g2.getFontMetrics();
+			int textWidth = fm.stringWidth(slideText);
+			int textHeight = fm.getHeight();
+
+			int textX = contentX + contentWidth - textWidth - 30; // 10px padding from right
+			int textY = contentY + contentHeight - textHeight + fm.getAscent() - 30; // 10px padding from bottom
+
+			g2.drawString(slideText, textX, textY);
+
+			// Draw Slide Content
+			Rectangle area = new Rectangle(contentX + 10, contentY + 30, contentWidth - 20, contentHeight - 40);
+			slide.draw(g2, area, this);
 		}
-		g.setFont(labelFont);
-		g.setColor(COLOR);
-		g.drawString("Slide " + (1 + presentation.getSlideNumber()) + " of " +
-                 presentation.getSize(), XPOS, YPOS);
-		Rectangle area = new Rectangle(0, YPOS, getWidth(), (getHeight() - YPOS));
-		slide.draw(g, area, this);
 	}
 
 	@Override
