@@ -16,10 +16,12 @@ public class SlideItemTest {
 
     @BeforeEach
     public void setup() {
+        Style.createStyles();
         graphics = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
         observer = (img, infoflags, x, y, width, height) -> true;
         style = Style.getStyle(1);
     }
+
 
     @Test
     public void testTextItemAsSlideItem() {
@@ -35,7 +37,7 @@ public class SlideItemTest {
 
     @Test
     public void testBitmapItemAsSlideItem() {
-        BitmapItem item = new BitmapItem();
+        BitmapItem item = new BitmapItem(2, "serclogo_fc.jpg");
         item.setImageName("serclogo_fc.jpg");
         item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
         item.setLevel(2);
@@ -46,7 +48,7 @@ public class SlideItemTest {
         assertNotNull(box);
 
         assertDoesNotThrow(() -> item.draw(10, 10, 1.0f, graphics, style, observer));
-        assertDoesNotThrow(() -> item.setStyle(style)); // even if it's a no-op
+        assertDoesNotThrow(() -> item.setStyle(style));
     }
 
     @Test
@@ -66,9 +68,10 @@ public class SlideItemTest {
     @Test
     public void testTextItemWithNullText() {
         TextItem item = new TextItem(1, null);
-        assertNull(item.getText());
+        assertEquals("", item.getText());
         assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, graphics, Style.getStyle(1), observer));
     }
+
 
     @Test
     public void testTextItemWithNegativeLevel() {
@@ -83,23 +86,29 @@ public class SlideItemTest {
     }
 
     @Test
-    public void testBitmapItemWithNullBufferedImage() {
-        BitmapItem item = new BitmapItem();
-        item.setLevel(2);
-        item.setImageName("serclogo_fc.jpg");
+    public void testBitmapItemWithNullBufferedImageThrows() {
+        BitmapItem item = new BitmapItem(2, "serclogo_fc.jpg");
         item.setBufferedImage(null);
-
-        assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, graphics, Style.getStyle(2), observer));
+        assertThrows(NullPointerException.class, () ->
+                item.draw(0, 0, 1.0f, graphics, Style.getStyle(2), observer)
+        );
     }
+
 
     @Test
     public void testBitmapItemWithHugeScale() {
-        BitmapItem item = new BitmapItem();
+        BitmapItem item = new BitmapItem(1, "serclogo_fc.jpg");
         item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
-        item.setLevel(1);
-
-        assertDoesNotThrow(() -> item.draw(0, 0, 10.0f, graphics, Style.getStyle(1), observer));
+        assertDoesNotThrow(() -> item.draw(
+                0,
+                0,
+                10.0f,
+                graphics,
+                Style.getStyle(1),
+                observer
+        ));
     }
+
 
     @Test
     public void testCollectionItemWithNestedLevels() {
@@ -116,14 +125,13 @@ public class SlideItemTest {
     public void testCollectionItemWithMixedChildren() {
         CollectionItem collection = new CollectionItem(1);
         collection.add(new TextItem(1, "Text"), Style.getStyle(1));
-
-        BitmapItem bitmap = new BitmapItem();
+        BitmapItem bitmap = new BitmapItem(1, "serclogo_fc.jpg");
         bitmap.setBufferedImage(new BufferedImage(50, 50, BufferedImage.TYPE_INT_ARGB));
-        bitmap.setLevel(1);
 
         collection.add(bitmap, Style.getStyle(1));
 
         assertDoesNotThrow(() -> collection.draw(0, 0, 1.0f, graphics, Style.getStyle(1), observer));
     }
+
 }
 

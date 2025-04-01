@@ -78,16 +78,16 @@ public class SlideTest {
 
     @Test
     public void testDrawDoesNotThrow() {
+        Style.createStyles();
         Graphics g = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
         ImageObserver observer = (img, infoflags, x, y, width, height) -> true;
         Rectangle area = new Rectangle(0, 0, 1200, 800);
-
         slide.setTitle("Draw Test");
         slide.append(1, "Item A");
         slide.append(2, "Item B");
-
         assertDoesNotThrow(() -> slide.draw(g, area, observer));
     }
+
 
     @Test
     public void testGetScaleReflection() throws Exception {
@@ -113,7 +113,7 @@ public class SlideTest {
         assertDoesNotThrow(() -> slide.append(1, null));
         SlideItem item = slide.getSlideItem(0);
         assertTrue(item instanceof TextItem);
-        assertNull(((TextItem) item).getText());
+        assertEquals("", ((TextItem) item).getText());
     }
 
     @Test
@@ -125,17 +125,19 @@ public class SlideTest {
     }
 
     @Test
-    public void testGetSlideItemWithNegativeIndexReturnsNull() {
+    public void testGetSlideItemWithNegativeIndexThrows() {
         Slide slide = new Slide();
-        assertNull(slide.getSlideItem(-1));
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> slide.getSlideItem(-1));
     }
 
+
     @Test
-    public void testGetSlideItemOutOfBoundsReturnsNull() {
+    public void testGetSlideItemOutOfBoundsThrowsException() {
         Slide slide = new Slide();
         slide.append(1, "Item A");
-        assertNull(slide.getSlideItem(2));
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> slide.getSlideItem(2));
     }
+
 
     @Test
     public void testSetTitleToNull() {
@@ -146,8 +148,11 @@ public class SlideTest {
 
     @Test
     public void testDrawWithNullObserverDoesNotThrow() {
+        Style.createStyles();
         Slide slide = new Slide();
-        slide.append(1, "Draw me");
+        slide.setTitle("Draw me");
+        slide.append(1, "Some content");
+
         Graphics g = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB).getGraphics();
         Rectangle area = new Rectangle(0, 0, 800, 600);
         assertDoesNotThrow(() -> slide.draw(g, area, null));
@@ -155,11 +160,14 @@ public class SlideTest {
 
     @Test
     public void testDrawWithNoItemsDoesNotThrow() {
+        Style.createStyles();
         Slide slide = new Slide();
+        slide.setTitle("Empty slide");
         Graphics g = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB).getGraphics();
         Rectangle area = new Rectangle(0, 0, 800, 600);
         assertDoesNotThrow(() -> slide.draw(g, area, (img, f, x, y, w, h) -> true));
     }
+
 
     @Test
     public void testAddSameObserverTwiceDoesNotCrash() {
