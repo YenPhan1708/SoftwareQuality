@@ -51,7 +51,7 @@ public class SlideViewerComponentTest {
 
     @Test
     public void testUpdateWithNullSlideDoesNotThrow() {
-        assertDoesNotThrow(() -> component.update(null));
+        assertDoesNotThrow(() -> component.update((Slide)null));
     }
 
     @Test

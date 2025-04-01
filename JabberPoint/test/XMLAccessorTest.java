@@ -66,5 +66,88 @@ public class XMLAccessorTest {
         assertThrows(NullPointerException.class, () -> accessor.loadFile(null, "file.xml"));
     }
 
+    @Test
+    public void testSaveEmptyPresentation() {
+        Presentation p = new Presentation();
+        assertDoesNotThrow(() -> accessor.saveFile(p, "empty-presentation.xml"));
+    }
+
+    @Test
+    public void testSavePresentationWithNullSlide() {
+        Presentation p = new Presentation();
+        p.setTitle("Null slide test");
+        p.append(null); // simulate null item
+        assertDoesNotThrow(() -> accessor.saveFile(p, "null-slide.xml"));
+    }
+
+    @Test
+    public void testSavePresentationWithNoTitle() {
+        Presentation p = new Presentation(); // no title
+        p.append(new Slide());
+        assertDoesNotThrow(() -> accessor.saveFile(p, "no-title.xml"));
+    }
+
+    @Test
+    public void testLoadMalformedXmlFileThrows() throws Exception {
+        String filename = "malformed.xml";
+        try (FileWriter writer = new FileWriter(filename)) {
+            writer.write("<presentation><bad></presentation>"); // broken XML
+        }
+
+        Presentation p = new Presentation();
+        assertThrows(IOException.class, () -> accessor.loadFile(p, filename));
+    }
+
+    @Test
+    public void testSaveFileWithSpecialCharactersInPath() {
+        Presentation p = new Presentation();
+        p.setTitle("Special");
+        assertDoesNotThrow(() -> accessor.saveFile(p, "test_čćžđš.xml"));
+    }
+
+    @Test
+    public void testSaveAndLoadPresentationWithUnicode() throws IOException {
+        Presentation p = new Presentation();
+        p.setTitle("標題 ");
+        Slide slide = new Slide();
+        slide.setTitle("幻燈片");
+        slide.append(1, "這是內容 with emoji :)");
+        p.append(slide);
+
+        String file = "unicode-test.xml";
+        accessor.saveFile(p, file);
+
+        Presentation loaded = new Presentation();
+        accessor.loadFile(loaded, file);
+
+        assertEquals("標題 ", loaded.getTitle());
+        assertEquals("幻燈片", loaded.getSlide(0).getTitle());
+    }
+
+    @Test
+    public void testRepeatedSaveAndLoadDoesNotCorrupt() throws IOException {
+        Presentation p = new Presentation();
+        p.setTitle("Repeat Test");
+        p.append(new Slide());
+
+        for (int i = 0; i < 5; i++) {
+            accessor.saveFile(p, "repeat-test.xml");
+
+            Presentation loaded = new Presentation();
+            accessor.loadFile(loaded, "repeat-test.xml");
+
+            assertEquals("Repeat Test", loaded.getTitle());
+        }
+    }
+
+    @Test
+    public void testSaveWithVeryLongFilename() {
+        Presentation p = new Presentation();
+        StringBuilder name = new StringBuilder("long_filename_");
+        for (int i = 0; i < 200; i++) name.append("x");
+        name.append(".xml");
+
+        assertDoesNotThrow(() -> accessor.saveFile(p, name.toString()));
+    }
 }
 
