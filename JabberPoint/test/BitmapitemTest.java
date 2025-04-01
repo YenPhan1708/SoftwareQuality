@@ -16,7 +16,8 @@ public class BitmapitemTest
     @BeforeEach
     public void setup() {
         bitmapItem = new BitmapItem();
-        bitmapItem.setImageName("JabberPoint.png");
+
+        bitmapItem.setImageName("serclogo_fc.jpg");
 
         // simulate loading
         BufferedImage dummyImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
@@ -24,12 +25,11 @@ public class BitmapitemTest
         bitmapItem.setLevel(2);
     }
 
-
     @Test
     public void testToStringContainsClassAndFilename() {
         String result = bitmapItem.toString();
         assertTrue(result.contains("BitmapItem"));
-        assertTrue(result.contains("test-image.png"));
+        assertTrue(result.contains("serclogo_fc.jpg"));
     }
 
     @Test

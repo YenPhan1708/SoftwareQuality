@@ -11,6 +11,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CollectionItemTest {
 
     private CollectionItem collection;
+    private final Style parentStyle = Style.getStyle(1);
+    private final Style childStyle = Style.getStyle(2);
+    private final ImageObserver observer = (img, flags, x, y, w, h) -> true;
 
     @BeforeEach
     public void setup()
@@ -83,5 +86,57 @@ public class CollectionItemTest {
         collection.add(textItem, style);
 
         assertDoesNotThrow(() -> collection.setStyle(style));
+    }
+
+    @Test
+    public void testSetStyleWithEmptyChildrenDoesNotThrow() {
+        CollectionItem collection = new CollectionItem(1);
+        assertDoesNotThrow(() -> collection.setStyle(parentStyle));
+    }
+
+    @Test
+    public void testSetStyleWithOnlyTextItemsUsesItemStyle() {
+        CollectionItem collection = new CollectionItem(1);
+        TextItem t1 = new TextItem(2, "Text 1");
+        TextItem t2 = new TextItem(2, "Text 2");
+
+        collection.add(t1, childStyle);
+        collection.add(t2, childStyle);
+
+        assertDoesNotThrow(() -> collection.setStyle(parentStyle));
+    }
+
+    @Test
+    public void testSetStyleWithOnlyNestedCollectionUsesParentStyle() {
+        CollectionItem parent = new CollectionItem(1);
+        CollectionItem child = new CollectionItem(2);
+
+        child.add(new TextItem(2, "Nested text"), Style.getStyle(2));
+        parent.add(child, Style.getStyle(1));
+
+        assertDoesNotThrow(() -> parent.setStyle(parentStyle));
+    }
+
+    @Test
+    public void testSetStyleWithMixedItems() {
+        CollectionItem parent = new CollectionItem(1);
+
+        TextItem text = new TextItem(2, "Text");
+        CollectionItem nested = new CollectionItem(2);
+        nested.add(new TextItem(2, "Nested"), Style.getStyle(2));
+
+        parent.add(text, childStyle); // Should use childStyle
+        parent.add(nested, childStyle); // Should use parentStyle
+
+        assertDoesNotThrow(() -> parent.setStyle(parentStyle));
+    }
+
+    @Test
+    public void testSetStyleWithNullStyleDoesNotThrow() {
+        CollectionItem collection = new CollectionItem(1);
+        TextItem item = new TextItem(2, "Null style test");
+
+        collection.add(item, Style.getStyle(2));
+        assertDoesNotThrow(() -> collection.setStyle(null));
     }
 }
