@@ -8,7 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 public class AboutBoxTest {
 
     @Test
-    public void testShowAboutBoxDoesNotThrowException() {
+    public void testShowAboutBoxDoesNotThrowException()
+    {
         Frame frame = new Frame();
 
         assertDoesNotThrow(() -> {
@@ -37,7 +38,8 @@ public class AboutBoxTest {
     }
 
     @Test
-    public void testShowWhenCalledMultipleTimes() {
+    public void testShowWhenCalledMultipleTimes()
+    {
         Frame frame = new Frame();
         assertDoesNotThrow(() -> AboutBox.show(frame));
         assertDoesNotThrow(() -> AboutBox.show(frame));

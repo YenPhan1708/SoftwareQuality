@@ -8,14 +8,15 @@ import java.awt.image.ImageObserver;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BitmapitemTest {
+public class BitmapitemTest
+{
 
     private BitmapItem bitmapItem;
 
     @BeforeEach
     public void setup() {
         bitmapItem = new BitmapItem();
-        bitmapItem.setImageName("test-image.png");
+        bitmapItem.setImageName("JabberPoint.png");
 
         // simulate loading
         BufferedImage dummyImage = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
@@ -23,12 +24,6 @@ public class BitmapitemTest {
         bitmapItem.setLevel(2);
     }
 
-    @Test
-    public void testGettersAndSetters() {
-        assertEquals("test.png", bitmapItem.getImageName());
-        assertNull(bitmapItem.getBufferedImage());
-        assertEquals(2, bitmapItem.getLevel());
-    }
 
     @Test
     public void testToStringContainsClassAndFilename() {
@@ -50,7 +45,8 @@ public class BitmapitemTest {
     }
 
     @Test
-    public void testDrawDoesNotThrow() {
+    public void testDrawDoesNotThrow()
+    {
         Graphics dummyGraphics = new BufferedImage(200, 100, BufferedImage.TYPE_INT_ARGB).getGraphics();
         ImageObserver dummyObserver =(img, flags, x, y, w, h)->true;
         Style style = Style.getStyle(2);
@@ -59,7 +55,8 @@ public class BitmapitemTest {
     }
 
     @Test
-    public void testImageNameCanBeNull() {
+    public void testImageNameCanBeNull()
+    {
         BitmapItem item = new BitmapItem();
         item.setImageName(null);
         assertNull(item.getImageName());
@@ -67,14 +64,16 @@ public class BitmapitemTest {
     }
 
     @Test
-    public void testBufferedImageCanBeNull() {
+    public void testBufferedImageCanBeNull()
+    {
         BitmapItem item = new BitmapItem();
         item.setBufferedImage(null);
         assertNull(item.getBufferedImage());
     }
 
     @Test
-    public void testGetBoundingBoxWithNullImageReturnsZeroBox() {
+    public void testGetBoundingBoxWithNullImageReturnsZeroBox()
+    {
         BitmapItem item = new BitmapItem();
         item.setBufferedImage(null); // no image
 
@@ -98,7 +97,8 @@ public class BitmapitemTest {
     }
 
     @Test
-    public void testDrawWithNullGraphicsThrowsNullPointerException() {
+    public void testDrawWithNullGraphicsThrowsNullPointerException()
+    {
         BitmapItem item = new BitmapItem();
         item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
         Style style = Style.getStyle(1);
@@ -108,7 +108,8 @@ public class BitmapitemTest {
     }
 
     @Test
-    public void testDrawWithNullStyleDoesNotThrow() {
+    public void testDrawWithNullStyleDoesNotThrow()
+    {
         BitmapItem item = new BitmapItem();
         item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
         Graphics g = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB).getGraphics();

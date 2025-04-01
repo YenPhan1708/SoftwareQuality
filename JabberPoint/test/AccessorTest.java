@@ -17,7 +17,8 @@ public class AccessorTest {
     }
 
     @Test
-    public void testLoadFileLoadsDemoSlides() throws IOException {
+    public void testLoadFileLoadsDemoSlides() throws IOException
+    {
         accessor.loadFile(presentation, "");
         assertEquals("Demo Presentation", presentation.getTitle());
         assertEquals(3, presentation.getSize(), "Should contain 3 demo slides");
@@ -25,7 +26,8 @@ public class AccessorTest {
 
 
     @Test
-    public void testSaveFileThrowsException() {
+    public void testSaveFileThrowsException()
+    {
         assertThrows(IllegalStateException.class, () -> {
             accessor.saveFile(presentation, "whatever.xml");
         });
