@@ -8,7 +8,7 @@ import java.awt.image.ImageObserver;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BitmapitemTest {
+public class BitmapItemTest {
 
     private BitmapItem bitmapItem;
 

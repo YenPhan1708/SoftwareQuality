@@ -36,7 +36,7 @@ public class SlideItemTest {
     @Test
     public void testBitmapItemAsSlideItem() {
         BitmapItem item = new BitmapItem();
-        item.setImageName("test.png");
+        item.setImageName("serclogo_fc.jpg");
         item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
         item.setLevel(2);
 
@@ -86,7 +86,7 @@ public class SlideItemTest {
     public void testBitmapItemWithNullBufferedImage() {
         BitmapItem item = new BitmapItem();
         item.setLevel(2);
-        item.setImageName("unknown.png");
+        item.setImageName("serclogo_fc.jpg");
         item.setBufferedImage(null);
 
         assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, graphics, Style.getStyle(2), observer));
