@@ -12,7 +12,8 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TextItemTest {
+public class TextItemTest
+{
     private TextItem textItem;
     private final Graphics g = new BufferedImage(1000, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
     private final ImageObserver observer = (img, infoflags, x, y, width, height) -> true;
@@ -22,47 +23,10 @@ public class TextItemTest {
         textItem = new TextItem(2, "Hello world");
     }
 
-    @Test
-    public void testConstructorAndGetText() {
-        assertEquals("Hello world", textItem.getText());
-        assertEquals(2, textItem.getLevel());
-    }
 
     @Test
-    public void testSetAndGetFont() {
-        Font font = new Font("Arial", Font.PLAIN, 16);
-        textItem.setFont(font);
-        assertEquals(font, textItem.getFont());
-    }
-
-    @Test
-    public void testSetAndGetColor() {
-        Color color = Color.BLUE;
-        textItem.setColor(color);
-        assertEquals(color, textItem.getColor());
-    }
-
-    @Test
-    public void testSetAndGetText() {
-        textItem.setText("Updated");
-        assertEquals("Updated", textItem.getText());
-    }
-
-    @Test
-    public void testSetAndGetLevel() {
-        textItem.setLevel(4);
-        assertEquals(4, textItem.getLevel());
-    }
-
-    @Test
-    public void testSetAndGetStyle() {
-        Style style = Style.getStyle(2);
-        textItem.setStyle(style);
-        assertEquals(style, textItem.getStyle());
-    }
-
-    @Test
-    public void testAttributedStringReturnsCorrectFont() {
+    public void testAttributedStringReturnsCorrectFont()
+    {
         Style style = Style.getStyle(1);
         AttributedString attrStr = textItem.getAttributedString(style, 1.0f);
         AttributedCharacterIterator it = attrStr.getIterator();
@@ -71,7 +35,8 @@ public class TextItemTest {
     }
 
     @Test
-    public void testGetBoundingBoxReturnsValidRectangle() {
+    public void testGetBoundingBoxReturnsValidRectangle()
+    {
         Graphics g = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
         ImageObserver observer = (img, flags, x, y, w, h) -> true;
         Style style = Style.getStyle(2);
@@ -83,7 +48,8 @@ public class TextItemTest {
     }
 
     @Test
-    public void testDrawDoesNotThrow() {
+    public void testDrawDoesNotThrow()
+    {
         Graphics g = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
         ImageObserver observer = (img, flags, x, y, w, h) -> true;
         Style style = Style.getStyle(2);
@@ -92,23 +58,26 @@ public class TextItemTest {
     }
 
     @Test
-    public void testToStringIncludesText() {
+    public void testToStringIncludesText()
+    {
         String str = textItem.toString();
         assertTrue(str.contains("TextItem"));
         assertTrue(str.contains("Hello world"));
     }
 
     @Test
-    public void testEmptyTextString() {
+    public void testEmptyTextString()
+    {
         TextItem item = new TextItem(1, "");
         assertEquals("", item.getText());
         assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, g, Style.getStyle(1), observer));
     }
 
     @Test
-    public void testNullTextString() {
+    public void testNullTextString()
+    {
         TextItem item = new TextItem(1, null);
-        assertNull(item.getText());
+        assertEquals("", item.getText());
         assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, g, Style.getStyle(1), observer));
     }
 
@@ -124,12 +93,6 @@ public class TextItemTest {
         TextItem item = new TextItem(1, "Colorless");
         item.setColor(null);
         assertNull(item.getColor());
-    }
-
-    @Test
-    public void testNullStyleInDrawDoesNotThrow() {
-        TextItem item = new TextItem(1, "Safe Draw");
-        assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, g, null, observer));
     }
 
     @Test

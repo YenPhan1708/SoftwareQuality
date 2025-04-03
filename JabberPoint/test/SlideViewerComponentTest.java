@@ -7,26 +7,30 @@ import java.awt.image.BufferedImage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SlideViewerComponentTest {
+public class SlideViewerComponentTest
+{
 
     private SlideViewerComponent component;
 
     @BeforeEach
-    public void setup() {
+    public void setup()
+    {
         Presentation presentation = new Presentation();
         component = new SlideViewerComponent(presentation, new SlideViewerFrame("Test Frame", presentation));
     }
 
     @Test
-    public void testComponentInitializesAndHasPreferredSize() {
+    public void testComponentInitializesAndHasPreferredSize()
+    {
         assertNotNull(component);
         Dimension size = component.getPreferredSize();
-        assertEquals(SlideViewerComponent.WIDTH, size.width);
-        assertEquals(SlideViewerComponent.HEIGHT, size.height);
+        assertEquals(Slide.WIDTH, size.width);
+        assertEquals(Slide.HEIGHT, size.height);
     }
 
     @Test
-    public void testUpdateDoesNotThrow() {
+    public void testUpdateDoesNotThrow()
+    {
         Slide slide = new Slide();
         slide.setTitle("Slide A");
 
@@ -34,13 +38,15 @@ public class SlideViewerComponentTest {
     }
 
     @Test
-    public void testPaintComponentDoesNotThrow() {
+    public void testPaintComponentDoesNotThrow()
+    {
         Graphics g = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
         assertDoesNotThrow(() -> component.paintComponent(g));
     }
 
     @Test
-    public void testPaintComponentAfterUpdate() {
+    public void testPaintComponentAfterUpdate()
+    {
         Slide slide = new Slide();
         slide.setTitle("Slide B");
         component.update(slide);
@@ -50,18 +56,22 @@ public class SlideViewerComponentTest {
     }
 
     @Test
-    public void testUpdateWithNullSlideDoesNotThrow() {
+    public void testUpdateWithNullSlideDoesNotThrow()
+    {
         assertDoesNotThrow(() -> component.update((Slide)null));
     }
 
     @Test
-    public void testPaintComponentWithNullGraphicsThrows() {
+    public void testPaintComponentWithNullGraphicsThrows()
+    {
         assertThrows(NullPointerException.class, () -> component.paintComponent(null));
     }
 
     @Test
-    public void testUpdateWithMultipleSlidesSequentially() {
-        for (int i = 0; i < 5; i++) {
+    public void testUpdateWithMultipleSlidesSequentially()
+    {
+        for (int i = 0; i < 5; i++)
+        {
             Slide slide = new Slide();
             slide.setTitle("Slide " + i);
             slide.append(1, "Content " + i);
@@ -70,10 +80,12 @@ public class SlideViewerComponentTest {
     }
 
     @Test
-    public void testPaintComponentWithLargeSlideContent() {
+    public void testPaintComponentWithLargeSlideContent()
+    {
         Slide bigSlide = new Slide();
         bigSlide.setTitle("Big One");
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 50; i++)
+        {
             bigSlide.append(1, "Item " + i);
         }
 
@@ -84,7 +96,8 @@ public class SlideViewerComponentTest {
     }
 
     @Test
-    public void testPaintComponentWithTinyResolution() {
+    public void testPaintComponentWithTinyResolution()
+    {
         Slide slide = new Slide();
         slide.setTitle("Tiny Draw");
         slide.append(1, "Item");
@@ -96,8 +109,10 @@ public class SlideViewerComponentTest {
     }
 
     @Test
-    public void testUpdateAndDrawQuicklyInLoop() {
-        for (int i = 0; i < 3; i++) {
+    public void testUpdateAndDrawQuicklyInLoop()
+    {
+        for (int i = 0; i < 3; i++)
+        {
             Slide slide = new Slide();
             slide.setTitle("Quick " + i);
             slide.append(1, "Text " + i);

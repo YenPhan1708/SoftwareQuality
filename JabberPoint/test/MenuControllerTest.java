@@ -6,21 +6,24 @@ import java.awt.event.ActionListener;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MenuControllerTest {
+public class MenuControllerTest
+{
 
     private MenuController menuController;
     private Frame dummyFrame;
     private Presentation presentation;
 
     @BeforeEach
-    public void setup() {
+    public void setup()
+    {
         dummyFrame = new Frame();  // GUI shell for testing
         presentation = new Presentation();
         menuController = new MenuController(dummyFrame, presentation);
     }
 
     @Test
-    public void testMkMenuItemCreatesMenuItem() {
+    public void testMkMenuItemCreatesMenuItem()
+    {
         MenuItem item = menuController.mkMenuItem("TestItem");
         assertNotNull(item);
         assertEquals("TestItem", item.getLabel());
@@ -28,24 +31,28 @@ public class MenuControllerTest {
     }
 
     @Test
-    public void testMenuControllerConstructor() {
+    public void testMenuControllerConstructor()
+    {
         assertNotNull(menuController); // Just ensures it initializes without crashing
     }
 
     @Test
-    public void testMkMenuItemWithNullLabelThrows() {
+    public void testMkMenuItemWithNullLabelThrows()
+    {
         assertThrows(NullPointerException.class, () -> menuController.mkMenuItem(null));
     }
 
 
     @Test
-    public void testMkMenuItemWithEmptyStringThrows() {
+    public void testMkMenuItemWithEmptyStringThrows()
+    {
         assertThrows(StringIndexOutOfBoundsException.class, () -> menuController.mkMenuItem(""));
     }
 
 
     @Test
-    public void testMkMenuItemCreatesUniqueInstances() {
+    public void testMkMenuItemCreatesUniqueInstances()
+    {
         MenuItem item1 = menuController.mkMenuItem("Item A");
         MenuItem item2 = menuController.mkMenuItem("Item A");
 
@@ -55,7 +62,8 @@ public class MenuControllerTest {
     }
 
     @Test
-    public void testNewMenuItemHasListenerAttached() {
+    public void testNewMenuItemHasListenerAttached()
+    {
         Menu fileMenu = menuController.getMenu(0); // "File" menu
         MenuItem newItem = fileMenu.getItem(1);    // 2nd item = "New"
 
@@ -66,7 +74,8 @@ public class MenuControllerTest {
 
 
     @Test
-    public void testMenuItemShortcutExists() {
+    public void testMenuItemShortcutExists()
+    {
         MenuItem item = menuController.mkMenuItem("Something");
         assertNotNull(item.getShortcut(), "Expected shortcut to be set");
     }

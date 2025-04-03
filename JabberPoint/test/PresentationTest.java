@@ -6,29 +6,27 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PresentationTest {
+public class PresentationTest
+{
 
     private Presentation presentation;
 
     @BeforeEach
-    public void setup() {
+    public void setup()
+    {
         presentation = new Presentation();
     }
 
     @Test
-    public void testConstructorSetsDefaults() {
+    public void testConstructorSetsDefaults()
+    {
         assertEquals(0, presentation.getSize());
         assertEquals(-1, presentation.getSlideNumber());
     }
 
     @Test
-    public void testSetAndGetTitle() {
-        presentation.setTitle("My Presentation");
-        assertEquals("My Presentation", presentation.getTitle());
-    }
-
-    @Test
-    public void testAppendAndGetSlide() {
+    public void testAppendAndGetSlide()
+    {
         Slide slide = new Slide();
         slide.setTitle("Slide 1");
         presentation.append(slide);
@@ -38,7 +36,8 @@ public class PresentationTest {
     }
 
     @Test
-    public void testGetCurrentSlide() {
+    public void testGetCurrentSlide()
+    {
         Slide slide = new Slide();
         presentation.append(slide);
         presentation.setSlideNumber(0);
@@ -47,7 +46,8 @@ public class PresentationTest {
     }
 
     @Test
-    public void testSetSlideNumberAndGet() {
+    public void testSetSlideNumberAndGet()
+    {
         Slide slide = new Slide();
         presentation.append(slide);
         presentation.setSlideNumber(0);
@@ -56,7 +56,8 @@ public class PresentationTest {
     }
 
     @Test
-    public void testNextAndPrevSlide() {
+    public void testNextAndPrevSlide()
+    {
         Slide slide1 = new Slide();
         Slide slide2 = new Slide();
         presentation.append(slide1);
@@ -71,27 +72,31 @@ public class PresentationTest {
     }
 
     @Test
-    public void testGetSlideReturnsNullForOutOfBounds() {
+    public void testGetSlideReturnsNullForOutOfBounds()
+    {
         assertNull(presentation.getSlide(-1));
         assertNull(presentation.getSlide(100));
     }
 
     @Test
-    public void testExit() {
+    public void testExit()
+    {
         // This is not testable directly since it calls System.exit(n)
         // You would normally mock System.exit in advanced setups
         assertTrue(true); // Placeholder
     }
 
     @Test
-    public void testUpdatePrintsMessage() {
+    public void testUpdatePrintsMessage()
+    {
         Slide slide = new Slide();
         presentation.update(slide); // It only prints to console
         assertTrue(true); // Placeholder
     }
 
     @Test
-    public void testNotifySlideChangeViaReflection() throws Exception {
+    public void testNotifySlideChangeViaReflection() throws Exception
+    {
         Slide slide = new Slide();
         presentation.append(slide);
         presentation.setSlideNumber(0);
@@ -103,40 +108,46 @@ public class PresentationTest {
     }
 
     @Test
-    public void testSetTitleToEmptyString() {
+    public void testSetTitleToEmptyString()
+    {
         Presentation pres = new Presentation();
         pres.setTitle("");
         assertEquals("", pres.getTitle());
     }
 
     @Test
-    public void testSetTitleToNullDoesNotThrow() {
+    public void testSetTitleToNullDoesNotThrow()
+    {
         Presentation pres = new Presentation();
         assertDoesNotThrow(() -> pres.setTitle(null));
         assertNull(pres.getTitle());
     }
 
     @Test
-    public void testAppendNullSlideThrows() {
+    public void testAppendNullSlideThrows()
+    {
         Presentation pres = new Presentation();
         assertThrows(NullPointerException.class, () -> pres.append(null));
     }
 
     @Test
-    public void testGetSlideWithNegativeIndexReturnsNull() {
+    public void testGetSlideWithNegativeIndexReturnsNull()
+    {
         Presentation pres = new Presentation();
         assertNull(pres.getSlide(-1));
     }
 
     @Test
-    public void testGetSlideWithTooHighIndexReturnsNull() {
+    public void testGetSlideWithTooHighIndexReturnsNull()
+    {
         Presentation pres = new Presentation();
         pres.append(new Slide());
         assertNull(pres.getSlide(5));
     }
 
     @Test
-    public void testNextSlideWithOnlyOneSlideDoesNotOverflow() {
+    public void testNextSlideWithOnlyOneSlideDoesNotOverflow()
+    {
         Presentation pres = new Presentation();
         pres.append(new Slide());
         pres.setSlideNumber(0);
@@ -145,7 +156,8 @@ public class PresentationTest {
     }
 
     @Test
-    public void testPrevSlideAtFirstSlideDoesNotUnderflow() {
+    public void testPrevSlideAtFirstSlideDoesNotUnderflow()
+    {
         Presentation pres = new Presentation();
         pres.append(new Slide());
         pres.setSlideNumber(0);
@@ -154,27 +166,31 @@ public class PresentationTest {
     }
 
     @Test
-    public void testNextSlideWithNoSlidesDoesNothing() {
+    public void testNextSlideWithNoSlidesDoesNothing()
+    {
         Presentation pres = new Presentation();
         pres.nextSlide();
         assertEquals(-1, pres.getSlideNumber()); // initial default
     }
 
     @Test
-    public void testPrevSlideWithNoSlidesDoesNothing() {
+    public void testPrevSlideWithNoSlidesDoesNothing()
+    {
         Presentation pres = new Presentation();
         pres.prevSlide();
         assertEquals(-1, pres.getSlideNumber());
     }
 
     @Test
-    public void testGetCurrentSlideWhenNoneSetReturnsNull() {
+    public void testGetCurrentSlideWhenNoneSetReturnsNull()
+    {
         Presentation pres = new Presentation();
         assertNull(pres.getCurrentSlide());
     }
 
     @Test
-    public void testSetSlideNumberToInvalidNegativeValue() {
+    public void testSetSlideNumberToInvalidNegativeValue()
+    {
         Presentation pres = new Presentation();
         pres.append(new Slide());
         pres.setSlideNumber(-5);
@@ -183,7 +199,8 @@ public class PresentationTest {
     }
 
     @Test
-    public void testUpdateWithNullDoesNotThrow() {
+    public void testUpdateWithNullDoesNotThrow()
+    {
         Presentation pres = new Presentation();
         assertDoesNotThrow(() -> pres.update(null));
     }

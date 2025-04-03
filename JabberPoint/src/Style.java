@@ -38,6 +38,10 @@ public class Style extends PresentationManager
 
 	public static Style getStyle(int level)
 	{
+		if (styles == null)
+		{
+			createStyles(); // Ensure styles is initialized.
+		}
 		if (level >= styles.length)
 		{
 			level = styles.length - 1;

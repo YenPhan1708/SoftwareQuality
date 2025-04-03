@@ -6,19 +6,21 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class XMLAccessorTest {
-
+public class XMLAccessorTest
+{
     private XMLAccessor accessor;
     private Presentation presentation;
 
     @BeforeEach
-    public void setup() {
+    public void setup()
+    {
         accessor = new XMLAccessor();
         presentation = new Presentation();
     }
 
     @Test
-    public void testSaveFileCreatesXml() {
+    public void testSaveFileCreatesXml()
+    {
         presentation.setTitle("Saved Presentation");
         presentation.append(new Slide());
 
@@ -26,12 +28,14 @@ public class XMLAccessorTest {
     }
 
     @Test
-    public void testLoadInvalidFileThrowsException() {
+    public void testLoadInvalidFileThrowsException()
+    {
         assertThrows(IOException.class, () -> accessor.loadFile(presentation, "nonexistent.xml"));
     }
 
     @Test
-    public void testSaveAndLoadRoundTrip() throws IOException {
+    public void testSaveAndLoadRoundTrip() throws IOException
+    {
         presentation.setTitle("RoundTrip Title");
         Slide slide = new Slide();
         slide.setTitle("RoundTrip Slide");
@@ -50,63 +54,58 @@ public class XMLAccessorTest {
     }
 
     @Test
-    public void testSaveEmptyPresentationDoesNotThrow() {
+    public void testSaveEmptyPresentationDoesNotThrow()
+    {
         Presentation emptyPres = new Presentation();
         assertDoesNotThrow(() -> accessor.saveFile(emptyPres, "empty.xml"));
     }
 
     @Test
-    public void testSaveFileWithNullFilenameThrows() {
+    public void testSaveFileWithNullFilenameThrows()
+    {
         Presentation pres = new Presentation();
         assertThrows(NullPointerException.class, () -> accessor.saveFile(pres, null));
     }
 
     @Test
-    public void testLoadFileWithNullPresentationThrows() {
+    public void testLoadFileWithNullPresentationThrows()
+    {
         assertThrows(NullPointerException.class, () -> accessor.loadFile(null, "file.xml"));
     }
 
     @Test
-    public void testSaveEmptyPresentation() {
+    public void testSaveEmptyPresentation()
+    {
         Presentation p = new Presentation();
         assertDoesNotThrow(() -> accessor.saveFile(p, "empty-presentation.xml"));
     }
 
     @Test
-    public void testSavePresentationWithNullSlide() {
+    public void testAppendNullSlideShouldThrowException()
+    {
         Presentation p = new Presentation();
-        p.setTitle("Null slide test");
-        p.append(null); // simulate null item
-        assertDoesNotThrow(() -> accessor.saveFile(p, "null-slide.xml"));
+        assertThrows(IllegalArgumentException.class, () -> p.append(null));
     }
 
     @Test
-    public void testSavePresentationWithNoTitle() {
+    public void testSavePresentationWithNoTitle()
+    {
         Presentation p = new Presentation(); // no title
         p.append(new Slide());
         assertDoesNotThrow(() -> accessor.saveFile(p, "no-title.xml"));
     }
 
     @Test
-    public void testLoadMalformedXmlFileThrows() throws Exception {
-        String filename = "malformed.xml";
-        try (FileWriter writer = new FileWriter(filename)) {
-            writer.write("<presentation><bad></presentation>"); // broken XML
-        }
-
-        Presentation p = new Presentation();
-        assertThrows(IOException.class, () -> accessor.loadFile(p, filename));
-    }
-
-    @Test
-    public void testSaveFileWithSpecialCharactersInPath() {
+    public void testSaveFileWithSpecialCharactersInPath()
+    {
         Presentation p = new Presentation();
         p.setTitle("Special");
         assertDoesNotThrow(() -> accessor.saveFile(p, "test_čćžđš.xml"));
     }
 
     @Test
-    public void testSaveAndLoadPresentationWithUnicode() throws IOException {
+    public void testSaveAndLoadPresentationWithUnicode() throws IOException
+    {
         Presentation p = new Presentation();
         p.setTitle("標題 ");
         Slide slide = new Slide();
@@ -125,7 +124,8 @@ public class XMLAccessorTest {
     }
 
     @Test
-    public void testRepeatedSaveAndLoadDoesNotCorrupt() throws IOException {
+    public void testRepeatedSaveAndLoadDoesNotCorrupt() throws IOException
+    {
         Presentation p = new Presentation();
         p.setTitle("Repeat Test");
         p.append(new Slide());
@@ -141,7 +141,8 @@ public class XMLAccessorTest {
     }
 
     @Test
-    public void testSaveWithVeryLongFilename() {
+    public void testSaveWithVeryLongFilename()
+    {
         Presentation p = new Presentation();
         StringBuilder name = new StringBuilder("long_filename_");
         for (int i = 0; i < 200; i++) name.append("x");

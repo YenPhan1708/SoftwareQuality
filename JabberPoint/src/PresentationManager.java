@@ -24,6 +24,11 @@ public abstract class PresentationManager implements Accessor
     @Override
     public void loadFile(Presentation presentation, String filename) throws IOException
     {
+        if (presentation == null || filename == null || filename.isEmpty())
+        {
+            throw new NullPointerException("Filename cannot be null");
+        }
+
         Accessor accessor = createAccessor();
         presentation.clear();
         accessor.loadFile(presentation, filename);
@@ -32,6 +37,10 @@ public abstract class PresentationManager implements Accessor
     @Override
     public void saveFile(Presentation presentation, String filename ) throws IOException
     {
+        if (filename == null || filename.isEmpty())
+        {
+            throw new NullPointerException("Filename cannot be null or empty");
+        }
         Accessor accessor = createAccessor();
         accessor.saveFile(presentation, filename);
     }

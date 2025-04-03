@@ -25,13 +25,15 @@ public class AboutBoxTest {
     }
 
     @Test
-    public void testShowWithMinimalFrame() {
+    public void testShowWithMinimalFrame()
+    {
         Frame frame = new Frame();
         assertDoesNotThrow(() -> AboutBox.show(frame), "Should show AboutBox with empty frame");
     }
 
     @Test
-    public void testShowWithConfiguredFrame() {
+    public void testShowWithConfiguredFrame()
+    {
         Frame frame = new Frame("Main Frame");
         frame.setSize(400, 300);
         assertDoesNotThrow(() -> AboutBox.show(frame), "Should show AboutBox with sized frame");

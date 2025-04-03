@@ -5,19 +5,22 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DemoPresentationText {
+public class DemoPresentationText
+{
 
     private DemoPresentation demoPresentation;
     private Presentation presentation;
 
     @BeforeEach
-    public void setup() {
+    public void setup()
+    {
         demoPresentation = new DemoPresentation();
         presentation = new Presentation();
     }
 
     @Test
-    public void testLoadFileAddsSlides() throws IOException {
+    public void testLoadFileAddsSlides() throws IOException
+    {
         demoPresentation.loadFile(presentation, "ignored.xml");
 
         assertEquals("Demo Presentation", presentation.getTitle());
@@ -29,25 +32,29 @@ public class DemoPresentationText {
     }
 
     @Test
-    public void testSaveFileThrowsException() {
+    public void testSaveFileThrowsException()
+    {
         assertThrows(IllegalStateException.class, () -> {
             demoPresentation.saveFile(presentation, "anything.xml");
         });
     }
 
     @Test
-    public void testLoadFileWithNullFilename() {
+    public void testLoadFileWithNullFilename()
+    {
         assertDoesNotThrow(() -> demoPresentation.loadFile(presentation, null));
         assertEquals(3, presentation.getSize());  // Still loads demo
     }
 
     @Test
-    public void testLoadFileWithNullPresentation() {
+    public void testLoadFileWithNullPresentation()
+    {
         assertThrows(NullPointerException.class, () -> demoPresentation.loadFile(null, "anything.xml"));
     }
 
     @Test
-    public void testLoadFileTwiceResetsSlides() throws IOException {
+    public void testLoadFileTwiceResetsSlides() throws IOException
+    {
         demoPresentation.loadFile(presentation, "");
         int firstLoadCount = presentation.getSize();
 

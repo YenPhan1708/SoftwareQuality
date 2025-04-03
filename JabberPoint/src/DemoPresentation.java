@@ -13,6 +13,8 @@ public class DemoPresentation implements Accessor
 	@Override
 	public void loadFile(Presentation presentation, String unusedFilename) {
 		presentation.setTitle("Demo Presentation");
+		// Clear existing slides before loading new ones
+		presentation.clear(); // Assuming clearSlides() is implemented
 		Slide slide;
 		slide = new Slide();
 		slide.setTitle("JabberPoint");
@@ -50,7 +52,8 @@ public class DemoPresentation implements Accessor
 	}
 
 	@Override
-	public void saveFile(Presentation presentation, String unusedFilename) {
+	public void saveFile(Presentation presentation, String unusedFilename)
+	{
 		throw new IllegalStateException("Save As->Demo! called");
 	}
 }

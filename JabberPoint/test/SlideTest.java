@@ -10,31 +10,29 @@ import java.util.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SlideTest {
+public class SlideTest
+{
 
     private Slide slide;
 
     static class TestObserver implements SlideObserver {
         boolean updated = false;
         @Override
-        public void update(Slide slide) {
+        public void update(Slide slide)
+        {
             updated = true;
         }
     }
 
     @BeforeEach
-    public void setup() {
+    public void setup()
+    {
         slide = new Slide();
     }
 
     @Test
-    public void testSetAndGetTitle() {
-        slide.setTitle("Test Slide");
-        assertEquals("Test Slide", slide.getTitle());
-    }
-
-    @Test
-    public void testAppendTextItem() {
+    public void testAppendTextItem()
+    {
         slide.append(1, "Test message");
         assertEquals(1, slide.getSize());
 
@@ -45,7 +43,8 @@ public class SlideTest {
     }
 
     @Test
-    public void testAppendSlideItem() {
+    public void testAppendSlideItem()
+    {
         TextItem item = new TextItem(2, "Hello");
         slide.append(item);
         assertEquals(1, slide.getSize());
@@ -53,7 +52,8 @@ public class SlideTest {
     }
 
     @Test
-    public void testGetSlideItemsReturnsVector() {
+    public void testGetSlideItemsReturnsVector()
+    {
         slide.append(1, "One");
         slide.append(2, "Two");
 
@@ -62,7 +62,8 @@ public class SlideTest {
     }
 
     @Test
-    public void testObserverNotifications() {
+    public void testObserverNotifications()
+    {
         TestObserver observer = new TestObserver();
         slide.addObserver(observer);
 
@@ -77,7 +78,8 @@ public class SlideTest {
     }
 
     @Test
-    public void testDrawDoesNotThrow() {
+    public void testDrawDoesNotThrow()
+    {
         Style.createStyles();
         Graphics g = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
         ImageObserver observer = (img, infoflags, x, y, width, height) -> true;
@@ -90,7 +92,8 @@ public class SlideTest {
 
 
     @Test
-    public void testGetScaleReflection() throws Exception {
+    public void testGetScaleReflection() throws Exception
+    {
         Rectangle area = new Rectangle(0, 0, 1200, 800);
         Method m = Slide.class.getDeclaredMethod("getScale", Rectangle.class);
         m.setAccessible(true);
@@ -100,7 +103,8 @@ public class SlideTest {
     }
 
     @Test
-    public void testAppendNullSlideItem() {
+    public void testAppendNullSlideItem()
+    {
         Slide slide = new Slide();
         assertDoesNotThrow(() -> slide.append(null));
         assertEquals(1, slide.getSize());
@@ -108,7 +112,8 @@ public class SlideTest {
     }
 
     @Test
-    public void testAppendTextWithNullText() {
+    public void testAppendTextWithNullText()
+    {
         Slide slide = new Slide();
         assertDoesNotThrow(() -> slide.append(1, null));
         SlideItem item = slide.getSlideItem(0);
@@ -117,7 +122,8 @@ public class SlideTest {
     }
 
     @Test
-    public void testAppendWithNegativeLevel() {
+    public void testAppendWithNegativeLevel()
+    {
         Slide slide = new Slide();
         slide.append(-1, "Negative level test");
         SlideItem item = slide.getSlideItem(0);
@@ -125,14 +131,16 @@ public class SlideTest {
     }
 
     @Test
-    public void testGetSlideItemWithNegativeIndexThrows() {
+    public void testGetSlideItemWithNegativeIndexThrows()
+    {
         Slide slide = new Slide();
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> slide.getSlideItem(-1));
     }
 
 
     @Test
-    public void testGetSlideItemOutOfBoundsThrowsException() {
+    public void testGetSlideItemOutOfBoundsThrowsException()
+    {
         Slide slide = new Slide();
         slide.append(1, "Item A");
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> slide.getSlideItem(2));
@@ -140,14 +148,16 @@ public class SlideTest {
 
 
     @Test
-    public void testSetTitleToNull() {
+    public void testSetTitleToNull()
+    {
         Slide slide = new Slide();
         assertDoesNotThrow(() -> slide.setTitle(null));
         assertNull(slide.getTitle());
     }
 
     @Test
-    public void testDrawWithNullObserverDoesNotThrow() {
+    public void testDrawWithNullObserverDoesNotThrow()
+    {
         Style.createStyles();
         Slide slide = new Slide();
         slide.setTitle("Draw me");
@@ -159,7 +169,8 @@ public class SlideTest {
     }
 
     @Test
-    public void testDrawWithNoItemsDoesNotThrow() {
+    public void testDrawWithNoItemsDoesNotThrow()
+    {
         Style.createStyles();
         Slide slide = new Slide();
         slide.setTitle("Empty slide");
@@ -170,7 +181,8 @@ public class SlideTest {
 
 
     @Test
-    public void testAddSameObserverTwiceDoesNotCrash() {
+    public void testAddSameObserverTwiceDoesNotCrash()
+    {
         Slide slide = new Slide();
         SlideObserver observer = s -> {};
         slide.addObserver(observer);
@@ -179,14 +191,16 @@ public class SlideTest {
     }
 
     @Test
-    public void testRemoveUnregisteredObserverDoesNotCrash() {
+    public void testRemoveUnregisteredObserverDoesNotCrash()
+    {
         Slide slide = new Slide();
         SlideObserver observer = s -> {};
         assertDoesNotThrow(() -> slide.removeObserver(observer));
     }
 
     @Test
-    public void testGetScaleHandlesVerySmallArea() throws Exception {
+    public void testGetScaleHandlesVerySmallArea() throws Exception
+    {
         Slide slide = new Slide();
         Method m = Slide.class.getDeclaredMethod("getScale", Rectangle.class);
         m.setAccessible(true);

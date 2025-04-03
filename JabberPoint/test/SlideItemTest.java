@@ -8,14 +8,16 @@ import java.awt.image.ImageObserver;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SlideItemTest {
+public class SlideItemTest
+{
 
     private Graphics graphics;
     private ImageObserver observer;
     private Style style;
 
     @BeforeEach
-    public void setup() {
+    public void setup()
+    {
         Style.createStyles();
         graphics = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
         observer = (img, infoflags, x, y, width, height) -> true;
@@ -24,7 +26,8 @@ public class SlideItemTest {
 
 
     @Test
-    public void testTextItemAsSlideItem() {
+    public void testTextItemAsSlideItem()
+    {
         SlideItem item = new TextItem(1, "SlideItem Text");
         assertEquals(1, item.getLevel());
 
@@ -36,7 +39,8 @@ public class SlideItemTest {
     }
 
     @Test
-    public void testBitmapItemAsSlideItem() {
+    public void testBitmapItemAsSlideItem()
+    {
         BitmapItem item = new BitmapItem(2, "serclogo_fc.jpg");
         item.setImageName("serclogo_fc.jpg");
         item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
@@ -52,7 +56,8 @@ public class SlideItemTest {
     }
 
     @Test
-    public void testCollectionItemAsSlideItem() {
+    public void testCollectionItemAsSlideItem()
+    {
         CollectionItem item = new CollectionItem(3);
         item.add(new TextItem(1, "Nested"), Style.getStyle(1));
 
@@ -66,7 +71,8 @@ public class SlideItemTest {
     }
 
     @Test
-    public void testTextItemWithNullText() {
+    public void testTextItemWithNullText()
+    {
         TextItem item = new TextItem(1, null);
         assertEquals("", item.getText());
         assertDoesNotThrow(() -> item.draw(0, 0, 1.0f, graphics, Style.getStyle(1), observer));
@@ -74,19 +80,22 @@ public class SlideItemTest {
 
 
     @Test
-    public void testTextItemWithNegativeLevel() {
+    public void testTextItemWithNegativeLevel()
+    {
         TextItem item = new TextItem(-3, "Negative level");
         assertEquals(-3, item.getLevel());
     }
 
     @Test
-    public void testTextItemWithHugeLevel() {
+    public void testTextItemWithHugeLevel()
+    {
         TextItem item = new TextItem(99, "Extreme level");
         assertEquals(99, item.getLevel());
     }
 
     @Test
-    public void testBitmapItemWithNullBufferedImageThrows() {
+    public void testBitmapItemWithNullBufferedImageThrows()
+    {
         BitmapItem item = new BitmapItem(2, "serclogo_fc.jpg");
         item.setBufferedImage(null);
         assertThrows(NullPointerException.class, () ->
@@ -96,7 +105,8 @@ public class SlideItemTest {
 
 
     @Test
-    public void testBitmapItemWithHugeScale() {
+    public void testBitmapItemWithHugeScale()
+    {
         BitmapItem item = new BitmapItem(1, "serclogo_fc.jpg");
         item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
         assertDoesNotThrow(() -> item.draw(
@@ -111,7 +121,8 @@ public class SlideItemTest {
 
 
     @Test
-    public void testCollectionItemWithNestedLevels() {
+    public void testCollectionItemWithNestedLevels()
+    {
         CollectionItem parent = new CollectionItem(1);
         CollectionItem nested = new CollectionItem(2);
 
@@ -122,7 +133,8 @@ public class SlideItemTest {
     }
 
     @Test
-    public void testCollectionItemWithMixedChildren() {
+    public void testCollectionItemWithMixedChildren()
+    {
         CollectionItem collection = new CollectionItem(1);
         collection.add(new TextItem(1, "Text"), Style.getStyle(1));
         BitmapItem bitmap = new BitmapItem(1, "serclogo_fc.jpg");

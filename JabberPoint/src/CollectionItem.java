@@ -16,7 +16,7 @@ public class CollectionItem implements SlideItem
 
     public void add(SlideItem item, Style style)
     {
-        style = Style.getStyle(level);  // Get the correct style based on the item's level
+//style = Style.getStyle(level);  // Get the correct style based on the item's level
         children.add(item);
         itemStyles.add(style);  // Associate a specific style with the item
     }

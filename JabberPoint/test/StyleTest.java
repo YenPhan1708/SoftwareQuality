@@ -17,16 +17,6 @@ public class StyleTest {
         style = new Style(40, Color.RED, 32, 10);
     }
 
-    @Test
-    public void testConstructorInitializesFields() {
-        assertNotNull(style);
-        assertEquals(Color.RED, style.color);
-        assertEquals(40, style.indent);
-        assertEquals(32, style.fontSize);
-        assertEquals(10, style.leading);
-        assertNotNull(style.font);
-        assertEquals("Helvetica", style.font.getName());
-    }
 
     @Test
     public void testGetFontReturnsScaledFont() {

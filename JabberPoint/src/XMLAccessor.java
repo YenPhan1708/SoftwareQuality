@@ -55,6 +55,16 @@ public class XMLAccessor implements Accessor {
 	@Override
 	public void loadFile(Presentation presentation, String filename) throws IOException {
 		int slideNumber, itemNumber, max = 0, maxItems = 0;
+		if (presentation == null)
+		{
+			throw new NullPointerException("Presentation cannot be null");
+		}
+		File file = new File(filename);
+		if (!file.exists())
+		{
+			throw new IOException("File not found: " + filename);
+		}
+
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();    
 			Document document = builder.parse(new File(filename)); // Create a JDOM document

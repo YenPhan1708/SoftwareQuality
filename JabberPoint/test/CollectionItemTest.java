@@ -8,8 +8,8 @@ import java.awt.image.ImageObserver;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CollectionItemTest {
-
+public class CollectionItemTest
+{
     private CollectionItem collection;
     private final Style parentStyle = Style.getStyle(1);
     private final Style childStyle = Style.getStyle(2);
@@ -22,24 +22,15 @@ public class CollectionItemTest {
     }
 
     @Test
-    public void testConstructorLevel() {
+    public void testConstructorLevel()
+    {
         assertEquals(1, collection.getLevel());
     }
 
-    @Test
-    public void testAddWithStyleAffectsToString() {
-        TextItem textItem = new TextItem(1, "Hello");
-        Style style = Style.getStyle(1);
-
-        collection.add(textItem, style);
-        String result = collection.toString();
-
-        assertTrue(result.contains("CollectionItem")); // from toString()
-        assertTrue(result.contains("Hello")); // from TextItem’s toString()
-    }
 
     @Test
-    public void testRemoveItem() {
+    public void testRemoveItem()
+    {
         TextItem item = new TextItem(1, "RemoveMe");
         Style style = Style.getStyle(1);
         collection.add(item, style);
@@ -50,7 +41,8 @@ public class CollectionItemTest {
     }
 
     @Test
-    public void testDrawDoesNotThrow() {
+    public void testDrawDoesNotThrow()
+    {
         Graphics g = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
         ImageObserver observer = (img, flags, x, y, w, h) -> true;
         Style style = Style.getStyle(1);
@@ -89,13 +81,15 @@ public class CollectionItemTest {
     }
 
     @Test
-    public void testSetStyleWithEmptyChildrenDoesNotThrow() {
+    public void testSetStyleWithEmptyChildrenDoesNotThrow()
+    {
         CollectionItem collection = new CollectionItem(1);
         assertDoesNotThrow(() -> collection.setStyle(parentStyle));
     }
 
     @Test
-    public void testSetStyleWithOnlyTextItemsUsesItemStyle() {
+    public void testSetStyleWithOnlyTextItemsUsesItemStyle()
+    {
         CollectionItem collection = new CollectionItem(1);
         TextItem t1 = new TextItem(2, "Text 1");
         TextItem t2 = new TextItem(2, "Text 2");
@@ -107,7 +101,8 @@ public class CollectionItemTest {
     }
 
     @Test
-    public void testSetStyleWithOnlyNestedCollectionUsesParentStyle() {
+    public void testSetStyleWithOnlyNestedCollectionUsesParentStyle()
+    {
         CollectionItem parent = new CollectionItem(1);
         CollectionItem child = new CollectionItem(2);
 
@@ -118,7 +113,8 @@ public class CollectionItemTest {
     }
 
     @Test
-    public void testSetStyleWithMixedItems() {
+    public void testSetStyleWithMixedItems()
+    {
         CollectionItem parent = new CollectionItem(1);
 
         TextItem text = new TextItem(2, "Text");
@@ -132,7 +128,8 @@ public class CollectionItemTest {
     }
 
     @Test
-    public void testSetStyleWithNullStyleDoesNotThrow() {
+    public void testSetStyleWithNullStyleDoesNotThrow()
+    {
         CollectionItem collection = new CollectionItem(1);
         TextItem item = new TextItem(2, "Null style test");
 

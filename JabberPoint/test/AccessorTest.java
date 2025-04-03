@@ -5,13 +5,14 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AccessorTest {
-
+public class AccessorTest
+{
     private Accessor accessor;
     private Presentation presentation;
 
     @BeforeEach
-    public void setup() {
+    public void setup()
+    {
         accessor = new DemoPresentation();
         presentation = new Presentation();
     }

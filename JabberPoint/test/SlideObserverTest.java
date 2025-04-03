@@ -5,7 +5,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SlideObserverTest {
+public class SlideObserverTest
+{
 
     private Slide slide;
     private TestObserver observer;
@@ -24,7 +25,8 @@ public class SlideObserverTest {
     }
 
     @BeforeEach
-    public void setup() {
+    public void setup()
+    {
         slide = new Slide();
         observer = new TestObserver();
     }
@@ -39,7 +41,8 @@ public class SlideObserverTest {
     }
 
     @Test
-    public void testObserverNotCalledAfterRemoved() {
+    public void testObserverNotCalledAfterRemoved()
+    {
         slide.addObserver(observer);
         slide.removeObserver(observer);
 
@@ -47,8 +50,10 @@ public class SlideObserverTest {
 
         assertFalse(observer.isUpdated(), "Removed observer should not be notified");
     }
+
     @Test
-    public void testMultipleObserversAreCalled() {
+    public void testMultipleObserversAreCalled()
+    {
         Slide slide = new Slide();
 
         AtomicInteger callCount = new AtomicInteger(0);
@@ -65,7 +70,8 @@ public class SlideObserverTest {
     }
 
     @Test
-    public void testSameObserverCalledTwiceIfAddedTwice() {
+    public void testSameObserverCalledTwiceIfAddedTwice()
+    {
         Slide slide = new Slide();
         AtomicInteger callCount = new AtomicInteger(0);
 
@@ -79,7 +85,8 @@ public class SlideObserverTest {
     }
 
     @Test
-    public void testRemoveObserverMultipleTimesIsSafe() {
+    public void testRemoveObserverMultipleTimesIsSafe()
+    {
         Slide slide = new Slide();
         SlideObserver observer = s -> {};
         slide.addObserver(observer);
@@ -99,7 +106,8 @@ public class SlideObserverTest {
     }
 
     @Test
-    public void testObserverThrowingExceptionDoesNotCrashNotify() {
+    public void testObserverThrowingExceptionDoesNotCrashNotify()
+    {
         Slide slide = new Slide();
         SlideObserver badObserver = s -> { throw new RuntimeException("oops"); };
         SlideObserver goodObserver = s -> assertTrue(true);

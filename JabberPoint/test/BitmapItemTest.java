@@ -13,21 +13,24 @@ public class BitmapItemTest
     private BitmapItem bitmapItem;
 
     @BeforeEach
-    public void setup() {
+    public void setup()
+    {
         bitmapItem = new BitmapItem(2, "serclogo_fc.jpg");
         bitmapItem.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
     }
 
 
     @Test
-    public void testToStringContainsClassAndFilename() {
+    public void testToStringContainsClassAndFilename()
+    {
         String result = bitmapItem.toString();
         assertTrue(result.contains("BitmapItem"));
         assertTrue(result.contains("serclogo_fc.jpg"));
     }
 
     @Test
-    public void testBoundingBoxCalculation() {
+    public void testBoundingBoxCalculation()
+    {
         Style.createStyles();
 
         ImageObserver dummyObserver = (img, flags, x, y, w, h) -> true;
@@ -41,7 +44,8 @@ public class BitmapItemTest
     }
 
     @Test
-    public void testDrawDoesNotThrow() {
+    public void testDrawDoesNotThrow()
+    {
         Style.createStyles();
 
         Graphics dummyGraphics = new BufferedImage(200, 100, BufferedImage.TYPE_INT_ARGB).getGraphics();
@@ -62,7 +66,8 @@ public class BitmapItemTest
     }
 
     @Test
-    public void testBufferedImageCanBeNull() {
+    public void testBufferedImageCanBeNull()
+    {
         BitmapItem item = new BitmapItem(0, "serclogo_fc.jpg");
         item.setBufferedImage(null);
         assertNull(item.getBufferedImage());
@@ -70,7 +75,8 @@ public class BitmapItemTest
 
 
     @Test
-    public void testGetBoundingBoxWithNullImageThrows() {
+    public void testGetBoundingBoxWithNullImageThrows()
+    {
         Style.createStyles();
         BitmapItem item = new BitmapItem(1, "serclogo_fc.jpg");
         item.setBufferedImage(null);
@@ -83,7 +89,8 @@ public class BitmapItemTest
 
 
     @Test
-    public void testDrawWithNullObserverDoesNotThrow() {
+    public void testDrawWithNullObserverDoesNotThrow()
+    {
         Style.createStyles();
 
         BitmapItem item = new BitmapItem(1, "serclogo_fc.jpg");
@@ -97,7 +104,8 @@ public class BitmapItemTest
 
 
     @Test
-    public void testDrawWithNullGraphicsThrowsNullPointerException() {
+    public void testDrawWithNullGraphicsThrowsNullPointerException()
+    {
         Style.createStyles();
         BitmapItem item = new BitmapItem(1, "serclogo_fc.jpg");
         item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
@@ -110,7 +118,8 @@ public class BitmapItemTest
 
 
     @Test
-    public void testDrawWithNullStyleThrows() {
+    public void testDrawWithNullStyleThrows()
+    {
         BitmapItem item = new BitmapItem(1, "serclogo_fc.jpg");
         item.setBufferedImage(new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB));
 
