@@ -1,8 +1,8 @@
 import java.io.IOException;
 
-public abstract class PresentationManager
+public abstract class PresentationManager implements Accessor
 {
-    protected Presentation presentation;
+    public Presentation presentation;
 
     public PresentationManager(Presentation presentation)
     {
@@ -21,15 +21,26 @@ public abstract class PresentationManager
 
     public abstract Accessor createAccessor();
 
-    public void loadFile(String filename) throws IOException
+    @Override
+    public void loadFile(Presentation presentation, String filename) throws IOException
     {
+        if (presentation == null || filename == null || filename.isEmpty())
+        {
+            throw new NullPointerException("Filename cannot be null");
+        }
+
         Accessor accessor = createAccessor();
         presentation.clear();
         accessor.loadFile(presentation, filename);
     }
 
-    public void saveFile(String filename) throws IOException
+    @Override
+    public void saveFile(Presentation presentation, String filename ) throws IOException
     {
+        if (filename == null || filename.isEmpty())
+        {
+            throw new NullPointerException("Filename cannot be null or empty");
+        }
         Accessor accessor = createAccessor();
         accessor.saveFile(presentation, filename);
     }

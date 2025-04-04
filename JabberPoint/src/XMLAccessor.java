@@ -25,13 +25,12 @@ import org.w3c.dom.NodeList;
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-public class XMLAccessor implements Accessor
-{
+public class XMLAccessor implements Accessor {
 	
     /** Default API to use. */
     protected static final String DEFAULT_API_TO_USE = "dom";
     
-    /** Name of xml tags of attributen */
+    /** namen van xml tags of attributen */
     protected static final String SHOWTITLE = "showtitle";
     protected static final String SLIDETITLE = "title";
     protected static final String SLIDE = "slide";
@@ -47,8 +46,7 @@ public class XMLAccessor implements Accessor
     protected static final String NFE = "Number Format Exception";
     
     
-    private String getTitle(Element element, String tagName)
-	{
+    private String getTitle(Element element, String tagName) {
     	NodeList titles = element.getElementsByTagName(tagName);
     	return titles.item(0).getTextContent();
     	
@@ -58,8 +56,17 @@ public class XMLAccessor implements Accessor
 	public void loadFile(Presentation presentation, String filename) throws IOException
 	{
 		int slideNumber, itemNumber, max = 0, maxItems = 0;
-		try
+		if (presentation == null)
 		{
+			throw new NullPointerException("Presentation cannot be null");
+		}
+		File file = new File(filename);
+		if (!file.exists())
+		{
+			throw new IOException("File not found: " + filename);
+		}
+
+		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();    
 			Document document = builder.parse(new File(filename)); // Create a JDOM document
 			Element doc = document.getDocumentElement();
@@ -67,8 +74,7 @@ public class XMLAccessor implements Accessor
 
 			NodeList slides = doc.getElementsByTagName(SLIDE);
 			max = slides.getLength();
-			for (slideNumber = 0; slideNumber < max; slideNumber++)
-			{
+			for (slideNumber = 0; slideNumber < max; slideNumber++) {
 				Element xmlSlide = (Element) slides.item(slideNumber);
 				Slide slide = new Slide();
 				slide.setTitle(getTitle(xmlSlide, SLIDETITLE));

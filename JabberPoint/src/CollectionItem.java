@@ -16,7 +16,7 @@ public class CollectionItem implements SlideItem
 
     public void add(SlideItem item, Style style)
     {
-        style = Style.getStyle(level);  // Get the correct style based on the item's level
+//style = Style.getStyle(level);  // Get the correct style based on the item's level
         children.add(item);
         itemStyles.add(style);  // Associate a specific style with the item
     }
@@ -63,7 +63,8 @@ public class CollectionItem implements SlideItem
 
         int yOffset = y;  // Track the Y position for stacking items
 
-        for (int i = 0; i < children.size(); i++) {
+        for (int i = 0; i < children.size(); i++)
+        {
             SlideItem item = children.get(i);
             Style itemStyle = itemStyles.get(i);  // Get stored style for this item
 

@@ -61,7 +61,15 @@ public class Slide
 	{
 		for (SlideObserver observer : observers)
 		{
-			observer.update(this);
+			try
+			{
+				observer.update(this);
+			}
+			catch (Exception e)
+			{
+				// Log the exception or handle it as necessary
+				System.err.println("Observer threw an exception: " + e.getMessage());
+			}
 		}
 	}
 

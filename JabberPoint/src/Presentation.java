@@ -103,6 +103,10 @@ public class Presentation implements SlideObserver
 	// Add a slide to the presentation
 	public void append(Slide slide)
 	{
+		if (slide == null)
+		{
+			throw new IllegalArgumentException("Slide cannot be null");
+		}
 		showList.add(slide);
 		slide.addObserver(this);
 	}

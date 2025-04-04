@@ -142,7 +142,8 @@ public class TextItem implements SlideItem
 		}
 	  }
 
-	private List<TextLayout> getLayouts(Graphics g, Style s, float scale) {
+	private List<TextLayout> getLayouts(Graphics g, Style s, float scale)
+	{
 		List<TextLayout> layouts = new ArrayList<TextLayout>();
 		AttributedString attrStr = getAttributedString(s, scale);
 		Graphics2D g2d = (Graphics2D) g;
@@ -157,12 +158,14 @@ public class TextItem implements SlideItem
 	}
 
 	@Override
-	public void setStyle(Style style) {
+	public void setStyle(Style style)
+	{
 		this.style = style;
 
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "TextItem[" + getLevel()+","+getText()+"]";
 	}
 }
