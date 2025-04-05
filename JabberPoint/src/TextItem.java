@@ -29,20 +29,18 @@ public class TextItem implements SlideItem
 	private int level;
 	private Style style;
 
-//	private static final String EMPTYTEXT = "No Text Given";
-
-// a textitem of level level, with the text string
+	// A textitem of level, with the text string
 	public TextItem(int level, String text)
 	{
 		this.level = level;
 		this.text = text;
 	}
 
-// an empty textitem
-//	public TextItem() {
-//		this(0, EMPTYTEXT);
-//	}
-
+	// Give the text
+	public String getText()
+	{
+		return text == null ? "" : text;
+	}
 
 	public void setText(String text)
 	{
@@ -69,15 +67,15 @@ public class TextItem implements SlideItem
 		this.color = color;
 	}
 
+	@Override
+	public int getLevel()
+	{
+		return this.level;
+	}
+
 	public void setLevel(int level)
 	{
 		this.level = level;
-	}
-
-	// give the text
-	public String getText()
-	{
-		return text == null ? "" : text;
 	}
 
 	public Style getStyle()
@@ -85,7 +83,14 @@ public class TextItem implements SlideItem
 		return this.style;
 	}
 
-	// geef de AttributedString voor het item
+	@Override
+	public void setStyle(Style style)
+	{
+		this.style = style;
+
+	}
+
+	// Give the AttributedString for the item
 	public AttributedString getAttributedString(Style style, float scale)
 	{
 		AttributedString attrStr = new AttributedString(getText());
@@ -94,24 +99,22 @@ public class TextItem implements SlideItem
 	}
 
 	@Override
-	public int getLevel()
-	{
-		return this.level;
-	}
-
-	@Override
 // give the bounding box of the item
-	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style myStyle) {
+	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style myStyle)
+	{
 		List<TextLayout> layouts = getLayouts(g, myStyle, scale);
 		int xsize = 0, ysize = (int) (myStyle.leading * scale);
 		Iterator<TextLayout> iterator = layouts.iterator();
-		while (iterator.hasNext()) {
+		while (iterator.hasNext())
+		{
 			TextLayout layout = iterator.next();
 			Rectangle2D bounds = layout.getBounds();
-			if (bounds.getWidth() > xsize) {
+			if (bounds.getWidth() > xsize)
+			{
 				xsize = (int) bounds.getWidth();
 			}
-			if (bounds.getHeight() > 0) {
+			if (bounds.getHeight() > 0)
+			{
 				ysize += bounds.getHeight();
 			}
 			ysize += layout.getLeading() + layout.getDescent();
@@ -120,8 +123,9 @@ public class TextItem implements SlideItem
 	}
 
 	@Override
-// draw the item
-	public void draw(int x, int y, float scale, Graphics g, Style myStyle, ImageObserver o) {
+	// Draw the item
+	public void draw(int x, int y, float scale, Graphics g, Style myStyle, ImageObserver o)
+	{
 		if (text == null || text.length() == 0)
 		{
 			return;
@@ -135,7 +139,8 @@ public class TextItem implements SlideItem
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(usedStyle.color);  // Use the stored style color
 
-		for (TextLayout layout : layouts) {
+		for (TextLayout layout : layouts)
+		{
 			pen.y += layout.getAscent();
 			layout.draw(g2d, pen.x, pen.y);
 			pen.y += layout.getDescent();
@@ -150,18 +155,12 @@ public class TextItem implements SlideItem
 		FontRenderContext frc = g2d.getFontRenderContext();
 		LineBreakMeasurer measurer = new LineBreakMeasurer(attrStr.getIterator(), frc);
 		float wrappingWidth = (Slide.WIDTH - s.indent) * scale;
-		while (measurer.getPosition() < getText().length()) {
+		while (measurer.getPosition() < getText().length())
+		{
 			TextLayout layout = measurer.nextLayout(wrappingWidth);
 			layouts.add(layout);
 		}
 		return layouts;
-	}
-
-	@Override
-	public void setStyle(Style style)
-	{
-		this.style = style;
-
 	}
 
 	public String toString()

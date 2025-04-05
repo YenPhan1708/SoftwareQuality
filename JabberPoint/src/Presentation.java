@@ -15,10 +15,10 @@ import java.util.ArrayList;
 
 public class Presentation implements SlideObserver
 {
-	private String showTitle; // title of the presentation
-	private ArrayList<Slide> showList = null; // an ArrayList with Slides
-	private int currentSlideNumber = 0; // the slidenummer of the current Slide
-	private SlideViewerComponent slideViewComponent = null; // the viewcomponent of the Slides
+	private String showTitle; // Title of the presentation
+	private ArrayList<Slide> showList = null; // An ArrayList with Slides
+	private int currentSlideNumber = 0; // The slide nummer of the current Slide
+	private SlideViewerComponent slideViewComponent = null; // The viewcomponent of the Slides
 
 	public Presentation()
 	{
@@ -32,19 +32,40 @@ public class Presentation implements SlideObserver
 		clear();
 	}
 
-	public int getSize()
+	public String getShowTitle()
 	{
-		return showList.size();
+		return this.showTitle;
 	}
 
-	public String getTitle()
+	public void setShowTitle(String titleName)
 	{
-		return showTitle;
+		this.showTitle = titleName;
 	}
 
-	public void setTitle(String nt)
+	public ArrayList<Slide> getShowList()
 	{
-		showTitle = nt;
+		return this.showList;
+	}
+
+	public void setShowList(ArrayList<Slide> showList)
+	{
+		this.showList = showList;
+	}
+
+	// Give the number of the current slide
+	public int getCurrentSlideNumber()
+	{
+		return this.currentSlideNumber;
+	}
+
+	public void setCurrentSlideNumber(int currentSlideNumber)
+	{
+		this.currentSlideNumber = currentSlideNumber;
+	}
+
+	public SlideViewerComponent getSlideViewComponent()
+	{
+		return this.slideViewComponent;
 	}
 
 	public void setShowView(SlideViewerComponent slideViewerComponent)
@@ -52,13 +73,13 @@ public class Presentation implements SlideObserver
 		this.slideViewComponent = slideViewerComponent;
 	}
 
-	// give the number of the current slide
-	public int getSlideNumber()
+	// Give the current slide
+	public Slide getCurrentSlide()
 	{
-		return currentSlideNumber;
+		return getSlide(currentSlideNumber);
 	}
 
-	// change the current slide number and signal it to the window
+	// Change the current slide number and signal it to the window
 	public void setSlideNumber(int number)
 	{
 		currentSlideNumber = number;
@@ -68,7 +89,12 @@ public class Presentation implements SlideObserver
 		}
 	}
 
-	// go to the previous slide unless your at the beginning of the presentation
+	public int getSize()
+	{
+		return showList.size();
+	}
+
+	// Go to the previous slide unless your at the beginning of the presentation
 	public void prevSlide()
 	{
 		if (currentSlideNumber > 0)
@@ -78,7 +104,7 @@ public class Presentation implements SlideObserver
 	    }
 	}
 
-	// go to the next slide unless your at the end of the presentation.
+	// Go to the next slide unless your at the end of the presentation.
 	public void nextSlide()
 	{
 		if (currentSlideNumber < (showList.size()-1))
@@ -94,7 +120,7 @@ public class Presentation implements SlideObserver
 	}
 
 	// Delete the presentation to be ready for the next one.
-	void clear()
+	public void clear()
 	{
 		showList = new ArrayList<Slide>();
 		setSlideNumber(-1);
@@ -103,10 +129,6 @@ public class Presentation implements SlideObserver
 	// Add a slide to the presentation
 	public void append(Slide slide)
 	{
-		if (slide == null)
-		{
-			throw new IllegalArgumentException("Slide cannot be null");
-		}
 		showList.add(slide);
 		slide.addObserver(this);
 	}
@@ -118,12 +140,6 @@ public class Presentation implements SlideObserver
 			return null;
 	    }
 			return (Slide)showList.get(number);
-	}
-
-	// Give the current slide
-	public Slide getCurrentSlide()
-	{
-		return getSlide(currentSlideNumber);
 	}
 
 	public void exit(int n)

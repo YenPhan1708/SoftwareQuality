@@ -19,8 +19,8 @@ public class Slide
 {
 	public final static int WIDTH = 1200;
 	public final static int HEIGHT = 800;
-	protected String title; // title is saved separately
-	protected Vector<SlideItem> items;// slide items are saved in a Vector
+	protected String title; // Title is saved separately
+	protected Vector<SlideItem> items;// Slide items are saved in a Vector
 	private final List<SlideObserver> observers = new ArrayList<>();
 
 	public Slide()
@@ -28,23 +28,39 @@ public class Slide
 		items = new Vector<SlideItem>();
 	}
 
-	// Add a slide item
-	public void append(SlideItem anItem)
-	{
-		items.addElement(anItem);
-	}
-
-	// give the title of the slide
+	// Give the title of the slide
 	public String getTitle()
 	{
 		return title;
 	}
 
-	// change the title of the slide
+	// Change the title of the slide
 	public void setTitle(String newTitle)
 	{
 		this.title = newTitle;
 		notifyObservers();
+	}
+
+	// Give all SlideItems in a Vector
+	public Vector<SlideItem> getSlideItems()
+	{
+		return this.items;
+	}
+
+	public void setItems(Vector<SlideItem> items)
+	{
+		this.items = items;
+	}
+
+	public List<SlideObserver> getObservers()
+	{
+		return this.observers;
+	}
+
+	// Add a slide item
+	public void appendSlideItem(SlideItem anItem)
+	{
+		items.addElement(anItem);
 	}
 
 	public void addObserver(SlideObserver observer)
@@ -73,31 +89,19 @@ public class Slide
 		}
 	}
 
-	// Create TextItem of String, and add the TextItem 
-	public void append(int level, String message)
-	{
-		append(new TextItem(level, message));
-	}
-
-	// give the  SlideItem
+	// Give the  SlideItem
 	public SlideItem getSlideItem(int number)
 	{
 		return (SlideItem)items.elementAt(number);
 	}
 
-	// give all SlideItems in a Vector
-	public Vector<SlideItem> getSlideItems()
-	{
-		return items;
-	}
-
-	// give the size of the Slide
+	// Give the size of the Slide
 	public int getSize()
 	{
 		return items.size();
 	}
 
-	// draw the slide
+	// Draw the slide
 	public void draw(Graphics g, Rectangle area, ImageObserver view)
 	{
 		float scale = getScale(area);
@@ -107,7 +111,8 @@ public class Slide
 	    Style style = Style.getStyle(slideItem.getLevel());
 	    slideItem.draw(area.x, y, scale, g, style, view);
 	    y += slideItem.getBoundingBox(g, view, scale, style).height;
-	    for (int number=0; number<getSize(); number++) {
+	    for (int number=0; number<getSize(); number++)
+		{
 	      slideItem = (SlideItem)getSlideItems().elementAt(number);
 	      style = Style.getStyle(slideItem.getLevel());
 	      slideItem.draw(area.x, y, scale, g, style, view);

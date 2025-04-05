@@ -11,10 +11,11 @@
 public class DemoPresentation implements Accessor
 {
 	@Override
-	public void loadFile(Presentation presentation, String unusedFilename) {
-		presentation.setTitle("Demo Presentation");
+	public void loadFile(Presentation presentation, String filename)
+	{
+		presentation.setShowTitle("Demo Presentation");
 		// Clear existing slides before loading new ones
-		presentation.clear(); // Assuming clearSlides() is implemented
+		presentation.clear();
 		Slide slide;
 		slide = new Slide();
 		slide.setTitle("JabberPoint");

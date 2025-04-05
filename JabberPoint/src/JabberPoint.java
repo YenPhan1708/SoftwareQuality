@@ -41,9 +41,10 @@ public class JabberPoint extends PresentationManager
 		Presentation presentation = new Presentation();
 		new SlideViewerFrame(JABVERSION, presentation);
 
-		try {
+		try
+		{
 			if (argv.length == 0 || argv == null)
-			{ // a demo presentation
+			{ //Load a demo presentation
 				Accessor.getDemoAccessor().loadFile(presentation, "");
 			}
 			else

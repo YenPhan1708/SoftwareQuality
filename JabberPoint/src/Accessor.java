@@ -23,8 +23,8 @@ public interface Accessor
 		return new DemoPresentation();
 	}
 
-	public void loadFile(Presentation p, String fn) throws IOException;
+	public void loadFile(Presentation presentation, String filename) throws IOException;
 
-	public void saveFile(Presentation p, String fn) throws IOException;
+	public void saveFile(Presentation presentation, String filename) throws IOException;
 
 }

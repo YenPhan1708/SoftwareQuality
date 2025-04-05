@@ -25,12 +25,13 @@ import org.w3c.dom.NodeList;
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-public class XMLAccessor implements Accessor {
+public class XMLAccessor implements Accessor
+{
 	
     /** Default API to use. */
     protected static final String DEFAULT_API_TO_USE = "dom";
     
-    /** namen van xml tags of attributen */
+    /** Name for xml tags of the attributes */
     protected static final String SHOWTITLE = "showtitle";
     protected static final String SLIDETITLE = "title";
     protected static final String SLIDE = "slide";
@@ -46,7 +47,8 @@ public class XMLAccessor implements Accessor {
     protected static final String NFE = "Number Format Exception";
     
     
-    private String getTitle(Element element, String tagName) {
+    private String getTitle(Element element, String tagName)
+	{
     	NodeList titles = element.getElementsByTagName(tagName);
     	return titles.item(0).getTextContent();
     	
@@ -66,15 +68,17 @@ public class XMLAccessor implements Accessor {
 			throw new IOException("File not found: " + filename);
 		}
 
-		try {
+		try
+		{
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();    
 			Document document = builder.parse(new File(filename)); // Create a JDOM document
 			Element doc = document.getDocumentElement();
-			presentation.setTitle(getTitle(doc, SHOWTITLE));
+			presentation.setShowTitle(getTitle(doc, SHOWTITLE));
 
 			NodeList slides = doc.getElementsByTagName(SLIDE);
 			max = slides.getLength();
-			for (slideNumber = 0; slideNumber < max; slideNumber++) {
+			for (slideNumber = 0; slideNumber < max; slideNumber++)
+			{
 				Element xmlSlide = (Element) slides.item(slideNumber);
 				Slide slide = new Slide();
 				slide.setTitle(getTitle(xmlSlide, SLIDETITLE));
@@ -107,12 +111,12 @@ public class XMLAccessor implements Accessor {
 	{
 		int level = 1; // default
 		NamedNodeMap attributes = item.getAttributes();
-		String leveltext = attributes.getNamedItem(LEVEL).getTextContent();
-		if (leveltext != null)
+		String levelText = attributes.getNamedItem(LEVEL).getTextContent();
+		if (levelText != null)
 		{
 			try
 			{
-				level = Integer.parseInt(leveltext);
+				level = Integer.parseInt(levelText);
 			}
 			catch(NumberFormatException x)
 			{
@@ -120,14 +124,15 @@ public class XMLAccessor implements Accessor {
 			}
 		}
 		String type = attributes.getNamedItem(KIND).getTextContent();
-		if (TEXT.equals(type)) {
-			slide.append(new TextItem(level, item.getTextContent()));
+		if (TEXT.equals(type))
+		{
+			slide.appendSlideItem(new TextItem(level, item.getTextContent()));
 		}
 		else
 		{
 			if (IMAGE.equals(type))
 			{
-				slide.append(new BitmapItem(level, item.getTextContent()));
+				slide.appendSlideItem(new BitmapItem(level, item.getTextContent()));
 			}
 			else
 			{
@@ -136,13 +141,14 @@ public class XMLAccessor implements Accessor {
 		}
 	}
 	@Override
-	public void saveFile(Presentation presentation, String filename) throws IOException {
+	public void saveFile(Presentation presentation, String filename) throws IOException
+	{
 		PrintWriter out = new PrintWriter(new FileWriter(filename));
 		out.println("<?xml version=\"1.0\"?>");
 		out.println("<!DOCTYPE presentation SYSTEM \"jabberpoint.dtd\">");
 		out.println("<presentation>");
 		out.print("<showtitle>");
-		out.print(presentation.getTitle());
+		out.print(presentation.getShowTitle());
 		out.println("</showtitle>");
 		for (int slideNumber=0; slideNumber<presentation.getSize(); slideNumber++)
 		{

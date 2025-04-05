@@ -16,24 +16,21 @@ import java.awt.Font;
 
 public class Style extends PresentationManager
 {
-	private static Style[] styles; // de styles
-	
+	private static Style[] styles; // The styles
 	private static final String FONTNAME = "Helvetica";
-	int indent;
-	Color color;
-	Font font;
-	int fontSize;
-	int leading;
+	public int indent;
+	public Color color;
+	public Font font;
+	public int fontSize;
+	public int leading;
 
-	public static void createStyles()
+	public Style(int indent, Color color, int points, int leading)
 	{
-		styles = new Style[5];    
-		// The styles are fixed.
-		styles[0] = new Style(0, Color.red,   48, 20);	// style for item-level 0
-		styles[1] = new Style(20, Color.blue,  40, 10);	// style for item-level 1
-		styles[2] = new Style(50, Color.black, 36, 10);	// style for item-level 2
-		styles[3] = new Style(70, Color.black, 30, 10);	// style for item-level 3
-		styles[4] = new Style(90, Color.black, 24, 10);	// style for item-level 4
+		super(new Presentation());
+		this.indent = indent;
+		this.color = color;
+		font = new Font(FONTNAME, Font.BOLD, fontSize=points);
+		this.leading = leading;
 	}
 
 	public static Style getStyle(int level)
@@ -49,23 +46,75 @@ public class Style extends PresentationManager
 		return styles[level];
 	}
 
-	public Style(int indent, Color color, int points, int leading)
+	public static void setStyles(Style[] styles)
 	{
-        super(new Presentation());
-        this.indent = indent;
-		this.color = color;
-		font = new Font(FONTNAME, Font.BOLD, fontSize=points);
-		this.leading = leading;
+		Style.styles = styles;
 	}
 
-	public String toString()
+	public int getIndent()
 	{
-		return "["+ indent + "," + color + "; " + fontSize + " on " + leading +"]";
+		return this.indent;
+	}
+
+	public void setIndent(int indent)
+	{
+		this.indent = indent;
+	}
+
+	public Color getColor()
+	{
+		return this.color;
+	}
+
+	public void setColor(Color color)
+	{
+		this.color = color;
 	}
 
 	public Font getFont(float scale)
 	{
 		return font.deriveFont(fontSize * scale);
+	}
+
+	public void setFont(Font font)
+	{
+		this.font = font;
+	}
+
+	public int getFontSize()
+	{
+		return this.fontSize;
+	}
+
+	public void setFontSize(int fontSize)
+	{
+		this.fontSize = fontSize;
+	}
+
+	public int getLeading()
+	{
+		return this.leading;
+	}
+
+	public void setLeading(int leading)
+	{
+		this.leading = leading;
+	}
+
+	public static void createStyles()
+	{
+		styles = new Style[5];
+		// The styles are fixed.
+		styles[0] = new Style(0, Color.red,   48, 20);	 // Style for item-level 0
+		styles[1] = new Style(20, Color.blue,  40, 10); // Style for item-level 1
+		styles[2] = new Style(50, Color.black, 36, 10); // Style for item-level 2
+		styles[3] = new Style(70, Color.black, 30, 10); // Style for item-level 3
+		styles[4] = new Style(90, Color.black, 24, 10); // Style for item-level 4
+	}
+
+	public String toString()
+	{
+		return "["+ indent + "," + color + "; " + fontSize + " on " + leading +"]";
 	}
 
 	@Override
