@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileWriter;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +23,7 @@ public class XMLAccessorTest
         presentation.setTitle("Saved Presentation");
         presentation.append(new Slide());
 
-        assertDoesNotThrow(() -> accessor.saveFile(presentation, "test-output.xml"));
+        assertDoesNotThrow(() -> accessor.saveFile(presentation, "TestFile/test-output.xml"));
     }
 
     @Test
@@ -42,7 +41,7 @@ public class XMLAccessorTest
         slide.append(1, "Item A");
         presentation.append(slide);
 
-        String path = "roundtrip.xml";
+        String path = "TestFile/roundtrip.xml";
         accessor.saveFile(presentation, path);
 
         Presentation loaded = new Presentation();
@@ -57,7 +56,7 @@ public class XMLAccessorTest
     public void testSaveEmptyPresentationDoesNotThrow()
     {
         Presentation emptyPres = new Presentation();
-        assertDoesNotThrow(() -> accessor.saveFile(emptyPres, "empty.xml"));
+        assertDoesNotThrow(() -> accessor.saveFile(emptyPres, "TestFile/empty.xml"));
     }
 
     @Test
@@ -77,7 +76,7 @@ public class XMLAccessorTest
     public void testSaveEmptyPresentation()
     {
         Presentation p = new Presentation();
-        assertDoesNotThrow(() -> accessor.saveFile(p, "empty-presentation.xml"));
+        assertDoesNotThrow(() -> accessor.saveFile(p, "TestFile/empty-presentation.xml"));
     }
 
     @Test
@@ -92,7 +91,7 @@ public class XMLAccessorTest
     {
         Presentation p = new Presentation(); // no title
         p.append(new Slide());
-        assertDoesNotThrow(() -> accessor.saveFile(p, "no-title.xml"));
+        assertDoesNotThrow(() -> accessor.saveFile(p, "TestFile/no-title.xml"));
     }
 
     @Test
@@ -100,7 +99,7 @@ public class XMLAccessorTest
     {
         Presentation p = new Presentation();
         p.setTitle("Special");
-        assertDoesNotThrow(() -> accessor.saveFile(p, "test_čćžđš.xml"));
+        assertDoesNotThrow(() -> accessor.saveFile(p, "TestFile/test_čćžđš.xml"));
     }
 
     @Test
@@ -113,7 +112,7 @@ public class XMLAccessorTest
         slide.append(1, "這是內容 with emoji :)");
         p.append(slide);
 
-        String file = "unicode-test.xml";
+        String file = "TestFile/unicode-test.xml";
         accessor.saveFile(p, file);
 
         Presentation loaded = new Presentation();
@@ -131,10 +130,10 @@ public class XMLAccessorTest
         p.append(new Slide());
 
         for (int i = 0; i < 5; i++) {
-            accessor.saveFile(p, "repeat-test.xml");
+            accessor.saveFile(p, "TestFile/repeat-test.xml");
 
             Presentation loaded = new Presentation();
-            accessor.loadFile(loaded, "repeat-test.xml");
+            accessor.loadFile(loaded, "TestFile/repeat-test.xml");
 
             assertEquals("Repeat Test", loaded.getTitle());
         }
