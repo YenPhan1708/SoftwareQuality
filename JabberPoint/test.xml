@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE presentation SYSTEM "jabberpoint.dtd">
 <presentation>
-	<showtitle>XML-Based Presentation for Jabberpoint</showtitle>
+	<showtitle>XML-Based Presentation.Presentation for Jabberpoint</showtitle>
 	<slide>
 		<title>JabberPoint XML-Demo</title>
 		<item kind="text"  level="1">Welkom to Jabberpoint</item>

@@ -1,6 +1,14 @@
+import Accessor.Accessor;
+import Presentation.Presentation;
+
 import javax.swing.JOptionPane;
+import Presentation.PresentationManager;
+import Slide.SlideViewerFrame;
+import Style.Style;
 
 import java.io.IOException;
+import Style.*;
+import Accessor.*;
 
 /** JabberPoint Main Programma
  * <p>This program is distributed under the terms of the accompanying
