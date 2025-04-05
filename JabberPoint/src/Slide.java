@@ -63,6 +63,10 @@ public class Slide
 		items.addElement(anItem);
 	}
 
+	public void appendTextItem(int level, String message)
+	{
+		appendSlideItem(new TextItem(level, message));
+	}
 	public void addObserver(SlideObserver observer)
 	{
 		observers.add(observer);

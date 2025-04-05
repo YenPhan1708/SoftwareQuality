@@ -143,7 +143,7 @@ public class MenuController extends MenuBar
 		setHelpMenu(helpMenu);// Needed for portability (Motif, etc.).
 	}
 
-// create a menu item
+// Create a menu item
 	public MenuItem mkMenuItem(String name)
 	{
 		return new MenuItem(name, new MenuShortcut(name.charAt(0)));

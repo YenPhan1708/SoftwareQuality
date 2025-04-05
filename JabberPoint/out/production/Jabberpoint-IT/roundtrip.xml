@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<!DOCTYPE presentation SYSTEM "jabberpoint.dtd">
-<presentation>
-<showtitle>RoundTrip Title</showtitle>
-<slide>
-<title>RoundTrip Slide</title>
-<item kind="text" level="1">Item A</item>
-</slide>
-</presentation>

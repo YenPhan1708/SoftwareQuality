@@ -105,7 +105,7 @@ public class SlideViewerComponent extends JComponent implements SlideObserver
 			g2.setColor(COLOR);
 
 			// Move slide number to bottom-right of the main content
-			String slideText = "Presentation " + (1 + presentation.getCurrentSlideNumber()) + " of " + presentation.getSize();
+			String slideText = "Slide " + (1 + presentation.getCurrentSlideNumber()) + " of " + presentation.getSize();
 			FontMetrics fm = g2.getFontMetrics();
 			int textWidth = fm.stringWidth(slideText);
 			int textHeight = fm.getHeight();

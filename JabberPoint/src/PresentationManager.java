@@ -44,5 +44,4 @@ public abstract class PresentationManager implements Accessor
         Accessor accessor = createAccessor();
         accessor.saveFile(presentation, filename);
     }
-
 }
