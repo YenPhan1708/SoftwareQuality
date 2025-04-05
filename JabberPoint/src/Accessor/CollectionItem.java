@@ -18,9 +18,38 @@ public class CollectionItem implements SlideItem
         this.level = level;
     }
 
+    @Override
+    public int getLevel()
+    {
+        return level;
+    }
+
+    public void setLevel(int level)
+    {
+        this.level = level;
+    }
+
+    public List<SlideItem> getChildren()
+    {
+        return this.children;
+    }
+
+    public void setChildren(List<SlideItem> children) {
+        this.children = children;
+    }
+
+    public List<Style> getItemStyles()
+    {
+        return this.itemStyles;
+    }
+
+    public void setItemStyles(List<Style> itemStyles)
+    {
+        this.itemStyles = itemStyles;
+    }
+
     public void add(SlideItem item, Style style)
     {
-
         // Get the correct style based on the item's level
         children.add(item);
         itemStyles.add(style);  // Associate a specific style with the item
@@ -34,12 +63,6 @@ public class CollectionItem implements SlideItem
             children.remove(index);
             itemStyles.remove(index);  // Remove the style associated with the item
         }
-    }
-
-    @Override
-    public int getLevel()
-    {
-        return level; // Keeps the program behavior unchanged
     }
 
     @Override
