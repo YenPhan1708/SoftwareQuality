@@ -35,7 +35,7 @@ public class DemoPresentation implements Accessor
 		slide.appendTextItem(3, "Next slide: PgDn or Enter");
 		slide.appendTextItem(3, "Previous slide: PgUp or up-arrow");
 		slide.appendTextItem(3, "Quit: q or Q");
-		presentation.append(slide);
+		presentation.addSlide(slide);
 
 		slide = new Slide();
 		slide.setTitle("Demonstration of levels and styles");
@@ -46,7 +46,7 @@ public class DemoPresentation implements Accessor
 		slide.appendTextItem(2, "Level 2 has style number  2");
 		slide.appendTextItem(3, "This is how level 3 looks like");
 		slide.appendTextItem(4, "And this is level 4");
-		presentation.append(slide);
+		presentation.addSlide(slide);
 		slide = new Slide();
 		slide.setTitle("The third slide");
 
@@ -61,7 +61,7 @@ public class DemoPresentation implements Accessor
 
 		slide.appendTextItem(1, "This is the end of the presentation.");
 
-		presentation.append(slide);
+		presentation.addSlide(slide);
 
 	}
 

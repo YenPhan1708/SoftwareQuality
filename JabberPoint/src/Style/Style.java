@@ -19,7 +19,7 @@ import java.awt.Font;
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-public class Style extends PresentationManager
+public class Style
 {
 	private static Style[] styles; // The styles
 	private static final String FONTNAME = "Helvetica";
@@ -31,7 +31,6 @@ public class Style extends PresentationManager
 
 	public Style(int indent, Color color, int points, int leading)
 	{
-		super(new Presentation());
 		this.indent = indent;
 		this.color = color;
 		font = new Font(FONTNAME, Font.BOLD, fontSize=points);
@@ -122,9 +121,4 @@ public class Style extends PresentationManager
 		return "["+ indent + "," + color + "; " + fontSize + " on " + leading +"]";
 	}
 
-	@Override
-	public Accessor createAccessor()
-	{
-		return new XMLAccessor(); // Or switch to another Accessor.Accessor implementation
-	}
 }

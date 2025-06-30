@@ -87,7 +87,7 @@ public class XMLAccessor implements Accessor
 				Element xmlSlide = (Element) slides.item(slideNumber);
 				Slide slide = new Slide();
 				slide.setTitle(getTitle(xmlSlide, SLIDETITLE));
-				presentation.append(slide);
+				presentation.addSlide(slide); // ensures observers are added
 				
 				NodeList slideItems = xmlSlide.getElementsByTagName(ITEM);
 				maxItems = slideItems.getLength();

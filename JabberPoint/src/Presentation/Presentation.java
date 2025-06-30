@@ -130,10 +130,16 @@ public class Presentation implements SlideObserver
 	}
 
 	// Add a slide to the presentation
-	public void append(Slide slide)
+	public void addSlide(Slide slide)
 	{
 		showList.add(slide);
+		// Observer 1: Presentation (business logic)
 		slide.addObserver(this);
+
+		// Observer 2: Logger (non-UI behavior)
+		slide.addObserver(new LoggerObserver());
+
+		// SlideViewerComponent is still handled via setShowView()
 	}
 
 	// Get a slide with a certain slidenumber
