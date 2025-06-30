@@ -86,15 +86,9 @@ public class CollectionItem implements SlideItem
         for (int i = 0; i < children.size(); i++)
         {
             SlideItem item = children.get(i);
-            Style itemStyle = itemStyles.get(i);  // Ensure we apply the correct style per item
-
-            if (item instanceof TextItem)
-            {
-                item.setStyle(itemStyle);  // Apply the specific style stored for this item
-            }
-            else if (item instanceof CollectionItem) {
-                item.setStyle(style);  // For nested composites, propagate normally
-            }
+            Style itemStyle = itemStyles.get(i);
+            item.setStyle(itemStyle);  // delegate to child
         }
     }
+
 }

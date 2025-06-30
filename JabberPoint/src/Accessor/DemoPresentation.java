@@ -2,6 +2,7 @@ package Accessor;
 
 import Presentation.Presentation;
 import Slide.*;
+import Style.*;
 
 /** A built-in demo-presentation
  * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
@@ -46,15 +47,22 @@ public class DemoPresentation implements Accessor
 		slide.appendTextItem(3, "This is how level 3 looks like");
 		slide.appendTextItem(4, "And this is level 4");
 		presentation.append(slide);
-
 		slide = new Slide();
 		slide.setTitle("The third slide");
-		slide.appendTextItem(1, "To open a new presentation,");
-		slide.appendTextItem(2, "Use File->Open from the menu.");
-		slide.appendTextItem(1, " ");
+
+	// Create a CollectionItem
+		CollectionItem group = new CollectionItem(1);
+		group.add(new TextItem(2, "To open a new presentation,"), Style.getStyle(2));
+		group.add(new TextItem(2, "Use File->Open from the menu."), Style.getStyle(2));
+		group.add(new BitmapItem(2, "JabberPoint.jpg"), Style.getStyle(2));
+
+	// Add the CollectionItem to the slide
+		slide.appendSlideItem(group);
+
 		slide.appendTextItem(1, "This is the end of the presentation.");
-		slide.appendSlideItem(new BitmapItem(1, "JabberPoint.jpg"));
+
 		presentation.append(slide);
+
 	}
 
 	@Override
