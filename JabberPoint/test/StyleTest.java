@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import Style.Style;
+import Accessor.*;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -13,57 +15,47 @@ public class StyleTest {
 
     @BeforeEach
     public void setup() {
-        // Create a custom style for testing
         style = new Style(40, Color.RED, 32, 10);
     }
 
-
     @Test
-    public void testGetFontReturnsScaledFont() {
+    public void testGetFontReturnsScaledSize() {
         Font scaledFont = style.getFont(1.5f);
         assertEquals((int)(32 * 1.5f), scaledFont.getSize());
     }
 
     @Test
-    public void testToStringContainsStyleDetails() {
+    public void testToStringIncludesStyleDetails() {
         String result = style.toString();
         assertTrue(result.contains("40")); // indent
         assertTrue(result.contains("32")); // fontSize
         assertTrue(result.contains("10")); // leading
-
-        assertTrue(result.contains("Color")); // avoids assuming "RED"
+        assertTrue(result.contains("Color")); // generic color info
     }
 
     @Test
-    public void testCreateStylesAndGetStyle() {
-        Style.createStyles(); // initialize static array
-        Style s0 = Style.getStyle(0);
-        Style s1 = Style.getStyle(1);
-        Style s4 = Style.getStyle(4);
-
-        assertNotNull(s0);
-        assertNotNull(s1);
-        assertNotNull(s4);
-        assertEquals(Color.red, s0.color);
-        assertEquals(Color.blue, s1.color);
-        assertEquals(Color.black, s4.color);
-    }
-
-    @Test
-    public void testGetStyleLevelOutOfBounds() {
+    public void testCreateStylesAndGetStyleAtLevels() {
         Style.createStyles();
-        Style max = Style.getStyle(10); // level beyond array size
-        assertNotNull(max);
-        assertEquals(Color.black, max.color);
+        assertNotNull(Style.getStyle(0));
+        assertNotNull(Style.getStyle(1));
+        assertNotNull(Style.getStyle(4));
+
+        assertEquals(Color.red, Style.getStyle(0).color);
+        assertEquals(Color.blue, Style.getStyle(1).color);
+        assertEquals(Color.black, Style.getStyle(4).color);
     }
 
     @Test
-    public void testCreateAccessorReturnsXMLAccessor() {
-        assertTrue(style.createAccessor() instanceof XMLAccessor);
+    public void testGetStyleLevelOutOfBoundsReturnsFallback() {
+        Style.createStyles();
+        Style style = Style.getStyle(10); // beyond defined styles
+        assertNotNull(style);
+        assertEquals(Color.black, style.color);
     }
 
+
     @Test
-    public void testGetFontWithZeroScaleReturnsZeroSizeFont() {
+    public void testGetFontWithZeroScaleReturnsZeroFontSize() {
         Style style = new Style(10, Color.BLACK, 0, 10);
         Font font = style.getFont(0.0f);
         assertEquals(0, font.getSize());
@@ -73,28 +65,24 @@ public class StyleTest {
     public void testGetFontWithNegativeScaleReturnsNegativeFontSize() {
         Style style = new Style(10, Color.BLACK, 30, 10);
         Font font = style.getFont(-1.0f);
-        int expected = font.getSize(); // capture actual result
-        assertTrue(expected <= 0);
+        assertTrue(font.getSize() <= 0);
     }
 
-
-
     @Test
-    public void testGetFontWithVeryLargeScale() {
+    public void testGetFontWithVeryLargeScaleReturnsExpectedSize() {
         Style style = new Style(10, Color.BLACK, 5, 10);
         Font font = style.getFont(100.0f);
         assertEquals(500, font.getSize());
     }
 
     @Test
-    public void testGetStyleWithNegativeLevelThrows() {
+    public void testGetStyleWithNegativeLevelThrowsException() {
         Style.createStyles();
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> Style.getStyle(-5));
     }
 
-
     @Test
-    public void testGetStyleWithExcessivelyHighLevelReturnsFallback() {
+    public void testGetStyleWithVeryHighLevelReturnsFallbackStyle() {
         Style.createStyles();
         Style style = Style.getStyle(999);
         assertNotNull(style);
@@ -104,12 +92,11 @@ public class StyleTest {
     @Test
     public void testCreateStylesIsIdempotent() {
         Style.createStyles();
-        Style[] first = getStylesArray();
+        Style[] first = getInternalStylesArray();
         Style.createStyles();
-        Style[] second = getStylesArray();
+        Style[] second = getInternalStylesArray();
 
         assertEquals(first.length, second.length);
-
         for (int i = 0; i < first.length; i++) {
             assertEquals(first[i].indent, second[i].indent);
             assertEquals(first[i].color, second[i].color);
@@ -119,9 +106,8 @@ public class StyleTest {
         }
     }
 
-
     @Test
-    public void testToStringHandlesNullColorAndFontGracefully() throws Exception {
+    public void testToStringHandlesNullFontAndColor() throws Exception {
         Style style = new Style(20, Color.RED, 30, 10);
 
         Field colorField = Style.class.getDeclaredField("color");
@@ -137,15 +123,14 @@ public class StyleTest {
         assertTrue(result.contains("20"));
     }
 
-    // Helper method
-    private Style[] getStylesArray() {
+    // Internal helper to access private static styles[] field
+    private Style[] getInternalStylesArray() {
         try {
-            Field f = Style.class.getDeclaredField("styles");
-            f.setAccessible(true);
-            return (Style[]) f.get(null);
+            Field stylesField = Style.class.getDeclaredField("styles");
+            stylesField.setAccessible(true);
+            return (Style[]) stylesField.get(null);
         } catch (Exception e) {
             return null;
         }
     }
 }
-

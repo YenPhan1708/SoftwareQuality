@@ -1,0 +1,137 @@
+package Slide;
+import Accessor.*;
+
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.image.ImageObserver;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import Style.*;
+
+/** <p>A slide. This class has a drawing functionality.</p>
+ * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
+ * @version 1.1 2002/12/17 Gert Florijn
+ * @version 1.2 2003/11/19 Sylvia Stuurman
+ * @version 1.3 2004/08/17 Sylvia Stuurman
+ * @version 1.4 2007/07/16 Sylvia Stuurman
+ * @version 1.5 2010/03/03 Sylvia Stuurman
+ * @version 1.6 2014/05/16 Sylvia Stuurman
+ */
+
+public class Slide
+{
+	public final static int WIDTH = 1200;
+	public final static int HEIGHT = 800;
+	protected String title; // Title is saved separately
+	protected Vector<SlideItem> items;// Slide.Slide items are saved in a Vector
+	private final List<SlideObserver> observers = new ArrayList<>();
+
+	public Slide()
+	{
+		items = new Vector<SlideItem>();
+	}
+
+	// Give the title of the slide
+	public String getTitle()
+	{
+		return title;
+	}
+
+	// Change the title of the slide
+	public void setTitle(String newTitle)
+	{
+		this.title = newTitle;
+		notifyObservers();
+	}
+
+	// Give all SlideItems in a Vector
+	public Vector<SlideItem> getSlideItems()
+	{
+		return this.items;
+	}
+
+	public void setItems(Vector<SlideItem> items)
+	{
+		this.items = items;
+	}
+
+	public List<SlideObserver> getObservers()
+	{
+		return this.observers;
+	}
+
+	// Add a slide item
+	public void appendSlideItem(SlideItem anItem)
+	{
+		items.addElement(anItem);
+	}
+
+	public void appendTextItem(int level, String message)
+	{
+		appendSlideItem(new TextItem(level, message));
+	}
+	public void addObserver(SlideObserver observer)
+	{
+		observers.add(observer);
+	}
+
+	public void removeObserver(SlideObserver observer)
+	{
+		observers.remove(observer);
+	}
+
+	public void notifyObservers()
+	{
+		// Notify all registered observers (UI, logger, logic)
+		for (SlideObserver observer : observers)
+		{
+			try
+			{
+				observer.update(this);
+			}
+			catch (Exception e)
+			{
+				// Log the exception or handle it as necessary
+				System.err.println("Observer threw an exception: " + e.getMessage());
+			}
+		}
+	}
+
+	// Give the  Slide.SlideItem
+	public SlideItem getSlideItem(int number)
+	{
+		return (SlideItem)items.elementAt(number);
+	}
+
+	// Give the size of the Slide.Slide
+	public int getSize()
+	{
+		return items.size();
+	}
+
+	// Draw the slide
+	public void draw(Graphics g, Rectangle area, ImageObserver view)
+	{
+		float scale = getScale(area);
+	    int y = area.y;
+	// Title is handled separately
+	    SlideItem slideItem = new TextItem(0, getTitle());
+	    Style style = Style.getStyle(slideItem.getLevel());
+	    slideItem.draw(area.x, y, scale, g, style, view);
+	    y += slideItem.getBoundingBox(g, view, scale, style).height;
+	    for (int number=0; number<getSize(); number++)
+		{
+	      slideItem = (SlideItem)getSlideItems().elementAt(number);
+	      style = Style.getStyle(slideItem.getLevel());
+	      slideItem.draw(area.x, y, scale, g, style, view);
+	      y += slideItem.getBoundingBox(g, view, scale, style).height;
+	    }
+	  }
+
+	// Give the scale for drawing
+	private float getScale(Rectangle area)
+	{
+		return Math.min(((float)area.width) / ((float)WIDTH), ((float)area.height) / ((float)HEIGHT));
+	}
+}

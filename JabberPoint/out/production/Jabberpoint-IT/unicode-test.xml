@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<!DOCTYPE presentation SYSTEM "jabberpoint.dtd">
-<presentation>
-<showtitle>標題 </showtitle>
-<slide>
-<title>幻燈片</title>
-<item kind="text" level="1">這是內容 with emoji :)</item>
-</slide>
-</presentation>

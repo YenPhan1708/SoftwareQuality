@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import Accessor.*;
+import Style.Style;
 
 import java.awt.*;
 import java.awt.font.TextAttribute;

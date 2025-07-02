@@ -1,13 +1,15 @@
+import Slide.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import Presentation.*;
+import Controller.*;
 
 import java.awt.MenuBar;
 import java.awt.event.KeyListener;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SlideViewerFrameTest
-{
+public class SlideViewerFrameTest {
 
     private Presentation presentation;
     private SlideViewerFrame frame;
@@ -19,93 +21,80 @@ public class SlideViewerFrameTest
     }
 
     @Test
-    public void testConstructorInitializesFrame()
-    {
-        assertEquals("Jabberpoint 1.6 - OU", frame.getTitle()); // overridden title
+    public void testConstructorInitializesFrame() {
+        assertEquals("Jabberpoint 1.6 - OU", frame.getTitle(), "Title should be overridden");
         assertEquals(SlideViewerFrame.WIDTH, frame.getWidth());
         assertEquals(SlideViewerFrame.HEIGHT, frame.getHeight());
         assertTrue(frame.isVisible());
     }
 
     @Test
-    public void testFrameHasKeyListener()
-    {
+    public void testFrameHasKeyController() {
         KeyListener[] listeners = frame.getKeyListeners();
-        boolean hasKeyController = false;
-        for (KeyListener l : listeners)
-        {
-            if (l instanceof KeyController)
-            {
-                hasKeyController = true;
+        boolean found = false;
+        for (KeyListener l : listeners) {
+            if (l instanceof KeyController) {
+                found = true;
                 break;
             }
         }
-        assertTrue(hasKeyController, "Frame should register KeyController");
+        assertTrue(found, "Frame should have a KeyController");
     }
 
     @Test
-    public void testMenuBarIsSet()
-    {
+    public void testMenuBarIsSet() {
         MenuBar menuBar = frame.getMenuBar();
         assertNotNull(menuBar);
     }
 
     @Test
-    public void testSlideViewerComponentIsSet()
-    {
+    public void testSlideViewerComponentIsPresent() {
         assertEquals(1, frame.getContentPane().getComponentCount());
         assertTrue(frame.getContentPane().getComponent(0) instanceof SlideViewerComponent);
     }
 
     @Test
-    public void testMultipleFramesCreatedIndependently()
-    {
-        SlideViewerFrame frame1 = new SlideViewerFrame("Frame 1", new Presentation());
-        SlideViewerFrame frame2 = new SlideViewerFrame("Frame 2", new Presentation());
+    public void testMultipleFramesAreIndependent() {
+        SlideViewerFrame f1 = new SlideViewerFrame("Frame 1", new Presentation());
+        SlideViewerFrame f2 = new SlideViewerFrame("Frame 2", new Presentation());
 
-        assertNotEquals(frame1, frame2);
-        assertNotSame(frame1.getContentPane(), frame2.getContentPane());
+        assertNotSame(f1, f2);
+        assertNotSame(f1.getContentPane(), f2.getContentPane());
     }
 
     @Test
-    public void testFrameSizeRespectsStaticWidthHeight()
-    {
-        SlideViewerFrame frame = new SlideViewerFrame("Size Test", new Presentation());
-        assertEquals(SlideViewerFrame.WIDTH, frame.getWidth());
-        assertEquals(SlideViewerFrame.HEIGHT, frame.getHeight());
+    public void testFrameSizeMatchesStaticConstants() {
+        SlideViewerFrame f = new SlideViewerFrame("Size Test", new Presentation());
+        assertEquals(SlideViewerFrame.WIDTH, f.getWidth());
+        assertEquals(SlideViewerFrame.HEIGHT, f.getHeight());
     }
 
     @Test
-    public void testMenuBarIsSetAndSameInstance()
-    {
-        SlideViewerFrame frame = new SlideViewerFrame("Menu Test", new Presentation());
-        MenuBar bar1 = frame.getMenuBar();
-        MenuBar bar2 = frame.getMenuBar();
+    public void testMenuBarIsSameInstanceOnMultipleCalls() {
+        SlideViewerFrame f = new SlideViewerFrame("Menu Test", new Presentation());
+        MenuBar bar1 = f.getMenuBar();
+        MenuBar bar2 = f.getMenuBar();
         assertSame(bar1, bar2);
     }
 
     @Test
-    public void testKeyControllerExistsOnlyOnce()
-    {
-        SlideViewerFrame frame = new SlideViewerFrame("Key Test", new Presentation());
-        KeyListener[] listeners = frame.getKeyListeners();
-        long keyControllers = java.util.Arrays.stream(listeners)
-                .filter(k -> k instanceof KeyController).count();
-        assertEquals(1, keyControllers);
+    public void testOnlyOneKeyControllerRegistered() {
+        SlideViewerFrame f = new SlideViewerFrame("Key Test", new Presentation());
+        long count = java.util.Arrays.stream(f.getKeyListeners())
+                .filter(k -> k instanceof KeyController)
+                .count();
+        assertEquals(1, count);
     }
 
     @Test
-    public void testFrameIsVisibleByDefault()
-    {
-        SlideViewerFrame frame = new SlideViewerFrame("Visibility", new Presentation());
-        assertTrue(frame.isVisible());
+    public void testFrameIsVisibleByDefault() {
+        SlideViewerFrame f = new SlideViewerFrame("Visibility", new Presentation());
+        assertTrue(f.isVisible());
     }
 
     @Test
-    public void testFrameDisposesWithoutException()
-    {
-        SlideViewerFrame frame = new SlideViewerFrame("Dispose Test", new Presentation());
-        assertDoesNotThrow(frame::dispose);
+    public void testDisposeDoesNotThrow() {
+        SlideViewerFrame f = new SlideViewerFrame("Dispose Test", new Presentation());
+        assertDoesNotThrow(f::dispose);
     }
 }
-
