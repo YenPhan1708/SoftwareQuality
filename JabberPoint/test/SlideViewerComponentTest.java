@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import Slide.*;
+import Presentation.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,21 +9,19 @@ import java.awt.image.BufferedImage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SlideViewerComponentTest
-{
+public class SlideViewerComponentTest {
 
     private SlideViewerComponent component;
+    private Presentation presentation;
 
     @BeforeEach
-    public void setup()
-    {
-        Presentation presentation = new Presentation();
-        component = new SlideViewerComponent(presentation, new SlideViewerFrame("Test Frame", presentation));
+    public void setup() {
+        presentation = new Presentation();
+        component = new SlideViewerComponent(presentation, null); // Frame not needed for component logic
     }
 
     @Test
-    public void testComponentInitializesAndHasPreferredSize()
-    {
+    public void testComponentInitializesAndHasPreferredSize() {
         assertNotNull(component);
         Dimension size = component.getPreferredSize();
         assertEquals(Slide.WIDTH, size.width);
@@ -29,8 +29,7 @@ public class SlideViewerComponentTest
     }
 
     @Test
-    public void testUpdateDoesNotThrow()
-    {
+    public void testUpdateWithSlideDoesNotThrow() {
         Slide slide = new Slide();
         slide.setTitle("Slide A");
 
@@ -38,15 +37,13 @@ public class SlideViewerComponentTest
     }
 
     @Test
-    public void testPaintComponentDoesNotThrow()
-    {
+    public void testPaintComponentDoesNotThrowWithNullSlide() {
         Graphics g = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_ARGB).getGraphics();
-        assertDoesNotThrow(() -> component.paintComponent(g));
+        assertDoesNotThrow(() -> component.paintComponent(g)); // should handle null gracefully
     }
 
     @Test
-    public void testPaintComponentAfterUpdate()
-    {
+    public void testPaintComponentAfterSlideUpdate() {
         Slide slide = new Slide();
         slide.setTitle("Slide B");
         component.update(slide);
@@ -56,66 +53,56 @@ public class SlideViewerComponentTest
     }
 
     @Test
-    public void testUpdateWithNullSlideDoesNotThrow()
-    {
-        assertDoesNotThrow(() -> component.update((Slide)null));
+    public void testUpdateWithNullSlideDoesNotThrow() {
+        assertDoesNotThrow(() -> component.update((Slide) null));
     }
 
     @Test
-    public void testPaintComponentWithNullGraphicsThrows()
-    {
+    public void testPaintComponentWithNullGraphicsThrows() {
         assertThrows(NullPointerException.class, () -> component.paintComponent(null));
     }
 
     @Test
-    public void testUpdateWithMultipleSlidesSequentially()
-    {
-        for (int i = 0; i < 5; i++)
-        {
+    public void testSequentialSlideUpdates() {
+        for (int i = 0; i < 5; i++) {
             Slide slide = new Slide();
             slide.setTitle("Slide " + i);
-            slide.append(1, "Content " + i);
+            slide.appendTextItem(1, "Content " + i);
             assertDoesNotThrow(() -> component.update(slide));
         }
     }
 
     @Test
-    public void testPaintComponentWithLargeSlideContent()
-    {
+    public void testPaintComponentWithManyItems() {
         Slide bigSlide = new Slide();
         bigSlide.setTitle("Big One");
-        for (int i = 0; i < 50; i++)
-        {
-            bigSlide.append(1, "Item " + i);
+
+        for (int i = 0; i < 50; i++) {
+            bigSlide.appendTextItem(1, "Item " + i);
         }
 
         component.update(bigSlide);
-
         Graphics g = new BufferedImage(1600, 1200, BufferedImage.TYPE_INT_ARGB).getGraphics();
         assertDoesNotThrow(() -> component.paintComponent(g));
     }
 
     @Test
-    public void testPaintComponentWithTinyResolution()
-    {
+    public void testPaintComponentAtLowResolution() {
         Slide slide = new Slide();
         slide.setTitle("Tiny Draw");
-        slide.append(1, "Item");
+        slide.appendTextItem(1, "Item");
 
         component.update(slide);
-
         Graphics g = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB).getGraphics();
         assertDoesNotThrow(() -> component.paintComponent(g));
     }
 
     @Test
-    public void testUpdateAndDrawQuicklyInLoop()
-    {
-        for (int i = 0; i < 3; i++)
-        {
+    public void testFastUpdateAndDrawLoop() {
+        for (int i = 0; i < 3; i++) {
             Slide slide = new Slide();
             slide.setTitle("Quick " + i);
-            slide.append(1, "Text " + i);
+            slide.appendTextItem(1, "Text " + i);
             component.update(slide);
 
             Graphics g = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB).getGraphics();
