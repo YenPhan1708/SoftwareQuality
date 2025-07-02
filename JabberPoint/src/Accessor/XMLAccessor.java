@@ -18,6 +18,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
+import Slide.Factory.SlideItemFactory;
+
 
 
 /** Accessor.XMLAccessor, reads and writes XML files
@@ -87,7 +89,7 @@ public class XMLAccessor implements Accessor
 				Element xmlSlide = (Element) slides.item(slideNumber);
 				Slide slide = new Slide();
 				slide.setTitle(getTitle(xmlSlide, SLIDETITLE));
-				presentation.append(slide);
+				presentation.addSlide(slide); // ensures observers are added
 				
 				NodeList slideItems = xmlSlide.getElementsByTagName(ITEM);
 				maxItems = slideItems.getLength();
@@ -129,21 +131,15 @@ public class XMLAccessor implements Accessor
 			}
 		}
 		String type = attributes.getNamedItem(KIND).getTextContent();
-		if (TEXT.equals(type))
+		try
 		{
-			slide.appendSlideItem(new TextItem(level, item.getTextContent()));
+			SlideItem slideItem = SlideItemFactory.create(type, item);
+			slide.appendSlideItem(slideItem);
 		}
-		else
-		{
-			if (IMAGE.equals(type))
-			{
-				slide.appendSlideItem(new BitmapItem(level, item.getTextContent()));
-			}
-			else
-			{
-				System.err.println(UNKNOWNTYPE);
-			}
+		catch (IllegalArgumentException e) {
+			System.err.println(UNKNOWNTYPE + ": " + type);
 		}
+
 	}
 	@Override
 	public void saveFile(Presentation presentation, String filename) throws IOException

@@ -83,6 +83,7 @@ public class Slide
 
 	public void notifyObservers()
 	{
+		// Notify all registered observers (UI, logger, logic)
 		for (SlideObserver observer : observers)
 		{
 			try
